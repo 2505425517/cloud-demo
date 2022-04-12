@@ -1,0 +1,81 @@
+@startuml
+class com.mywork.expert.service.StudyFieldServiceImpl {
+- StudyFieldMapper studyFieldMapper
++ List<Study> queryById(Integer)
++ Boolean add(Study)
++ Boolean update(Study)
++ Boolean del(List<Integer>)
+}
+class com.mywork.expert.pojo.Expert {
+}
+class com.mywork.expert.pojo.Study {
+- Integer fieldid
+- Integer userid
+- String fieldname
+- String fieldinfo
+- String concept
++ Integer getFieldid()
++ void setFieldid(Integer)
++ Integer getUserid()
++ void setUserid(Integer)
++ String getFieldname()
++ void setFieldname(String)
++ String getFieldinfo()
++ void setFieldinfo(String)
++ String getConcept()
++ void setConcept(String)
+}
+interface com.mywork.expert.service.StudyFieldService {
+~ List<Study> queryById(Integer)
+~ Boolean add(Study)
+~ Boolean update(Study)
+~ Boolean del(List<Integer>)
+}
+class com.mywork.expert.controller.ExpertCareerController {
+- ExpertCareerServiceImpl expertCareerService
++ List<Career> queryByUserId(Integer)
++ Result add(Career)
++ Result update(Career)
++ Result del(List<Integer>)
+}
+interface com.mywork.expert.mapper.ExpertCareerMapper {
++ List<Career> selectbyid(Integer)
+}
+class com.mywork.expert.service.ExpertCareerServiceImpl {
+- ExpertCareerMapper expertCareerMapper
++ List<Career> queryById(Integer)
++ Boolean add(Career)
++ Boolean update(Career)
++ Boolean del(List<Integer>)
+}
+class com.mywork.expert.controller.StudyFieldController {
+- StudyFieldServiceImpl studyFieldService
++ List<Study> queryByUserId(Integer)
++ Result add(Study)
++ Result update(Study)
++ Result del(List<Integer>)
+}
+interface com.mywork.expert.service.ExpertCareerService {
++ List<Career> queryById(Integer)
++ Boolean add(Career)
+~ Boolean update(Career)
+~ Boolean del(List<Integer>)
+}
+interface com.mywork.expert.mapper.StudyFieldMapper {
++ List<Study> selectbyid(Integer)
+}
+
+com.mywork.expert.pojo.Study ..> com.mywork.expert.mapper.StudyFieldMapper
+com.mywork.expert.pojo ..> com.mywork.expert.mapper.ExpertCareerMapper
+com.mywork.expert.service.StudyFieldService ..> com.mywork.expert.mapper.StudyFieldMapper
+com.mywork.expert.service.ExpertCareerService ..> com.mywork.expert.mapper.ExpertCareerMapper
+com.mywork.expert.controller.ExpertCareerController ..> com.mywork.expert.service.ExpertCareerService
+com.mywork.expert.controller.ExpertCareerController ..> com.mywork.expert.service.StudyFieldService
+
+com.mywork.expert.service.StudyFieldService <|.. com.mywork.expert.service.StudyFieldServiceImpl
+java.io.Serializable <|.. com.mywork.expert.pojo.Expert
+java.io.Serializable <|.. com.mywork.expert.pojo.Study
+tk.mybatis.mapper.common.Mapper <|-- com.mywork.expert.mapper.ExpertCareerMapper
+com.mywork.expert.service.ExpertCareerService <|.. com.mywork.expert.service.ExpertCareerServiceImpl
+tk.mybatis.mapper.common.Mapper <|-- com.mywork.expert.mapper.StudyFieldMapper
+@enduml

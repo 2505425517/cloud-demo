@@ -1,0 +1,59 @@
+@startuml
+interface com.mywork.user.mapper.UserMapper {
+}
+interface com.mywork.user.service.UserService {
+~ User queryById(Integer)
+~ List<User> findAll()
++ Boolean add(User)
++ User findById(Integer)
++ Boolean update(User)
++ Boolean del(List<Integer>)
+}
+class com.mywork.user.pojo.User {
+- Integer userid
+- String name
+- Integer age
+- String gender
+- String nationality
+- String mailAddress
+- String phoneNum
+- String precentcity
+- String address
+- String highestQualification
+- String status
+- List<Career> careers
+- List<Study> studys
+
+}
+
+class com.mywork.user.controller.UserController {
+- UserService userService
++ User queryById(Integer,String)
++ User queryById(Integer)
++ List<User> findall()
++ com.mywork.user.common.Result add(User)
++ Result findById(Integer)
++ Result update(User)
++ Result del(List<Integer>)
+}
+class com.mywork.user.service.UserServiceImpl {
+- UserMapper userMapper
+- RestTemplate restTemplate
++ User queryById(Integer)
++ List<User> findAll()
++ Boolean add(User)
++ User findById(Integer)
++ Boolean update(User)
++ Boolean del(List<Integer>)
+}
+'com.mywork.user.service.UserServiceImpl -[hidden]> com.mywork.user.service.UserService
+com.mywork.user.pojo.User -[hidden]> com.mywork.user.controller.UserController
+'java.io.Serializable -[hidden]> com.mywork.user.controller.UserController
+com.mywork.user.service.UserService -[hidden]> com.mywork.user.controller.UserController
+com.mywork.user.service.UserServiceImpl ..>com.mywork.user.mapper.UserMapper
+com.mywork.user.controller.UserController ..> com.mywork.user.service.UserService
+com.mywork.user.controller.UserController ..> com.mywork.user.pojo.User
+tk.mybatis.mapper.common.Mapper <|-- com.mywork.user.mapper.UserMapper
+java.io.Serializable <|.. com.mywork.user.pojo.User
+com.mywork.user.service.UserService <|.. com.mywork.user.service.UserServiceImpl
+@enduml

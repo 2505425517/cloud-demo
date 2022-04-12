@@ -1,0 +1,79 @@
+@startuml
+interface UserMapper {
+}
+interface UserService {
+~ List<User> findAll()
++ Page<User> search(Map)
++ Boolean add(User)
++ User findById(Integer)
++ Boolean update(User)
++ Boolean del(List<Integer>)
+~ User querycareerById(Integer)
+}
+class User {
+- Integer userid
+- String name
+- Integer age
+- String gender
+- String nationality
+- String mailAddress
+- String phoneNum
+- String precentcity
+- String address
+- String highestQualification
+- String status
+- Career[] careers
++ String toString()
++ Integer getUserid()
++ void setUserid(Integer)
++ String getName()
++ void setName(String)
++ Integer getAge()
++ void setAge(Integer)
++ String getGender()
++ void setGender(String)
++ String getNationality()
++ void setNationality(String)
++ String getMailAddress()
++ void setMailAddress(String)
++ String getPhoneNum()
++ void setPhoneNum(String)
++ String getPrecentcity()
++ void setPrecentcity(String)
++ String getAddress()
++ void setAddress(String)
++ String getHighestQualification()
++ void setHighestQualification(String)
++ String getStatus()
++ void setStatus(String)
++ Career[] getCareers()
++ void setCareers(Career[])
+}
+class UserController {
+- UserService userService
++ Result queryById(Integer)
++ com.mywork.user.common.Result find()
++ com.mywork.user.common.PageResult search(Map)
++ com.mywork.user.common.Result add(User)
++ Result findById(Integer)
++ Result update(User)
++ Result del(List<Integer>)
+}
+class UserServiceImpl {
+- UserMapper userMapper
+- RestTemplate restTemplate
++ User querycareerById(Integer)
++ List<User> findAll()
++ Page<User> search(Map)
++ Boolean add(User)
++ User findById(Integer)
++ Boolean update(User)
++ Boolean del(List<Integer>)
+}
+
+
+Mapper <|-- UserMapper
+Serializable <|.. User
+UserService <|.. UserServiceImpl
+Result <|-- UserServiceImpl
+@enduml
