@@ -45,7 +45,7 @@
         <!--相关统计-->
         <div class="row" >
  			<div class="col-sm-2"></div>
-			<div class="col-sm-4"  >
+			<div class="col-sm-4" >
             <section class="panel" >
             	<!--style="min-height: 500px;"-->
                 <!--<div class="panel-heading"> </div>-->
@@ -194,7 +194,7 @@
                 </section>
         </div>
         <div class="col-sm-2"></div>
-
+        </div>
         <div class="layui-footer footer footer-demo">
             <div class="layui-main">
                 <p>
@@ -235,7 +235,8 @@
                     id = this.getKeyfromURL("userid");
                     console.log(id);
                     // id = this.$route.query.userid;
-                    // alert(id);
+                    alert(id);
+                    if (id==null) { id=1;}
                     axios.get("/view/user/"+id).then((res)=>{
                         app.userinfo = res.data;
                         console.log(app.userinfo);
@@ -259,12 +260,12 @@
         });
     </script>
     <script>
-        // layui.use(['element','layer','form'], function(){
-        //     $ = layui.jquery;//jquery
-        //     lement = layui.element();//面包导航
-        //     layer = layui.layer;//弹出层
-        //     form = layui.form();
-        //     okLoading.close($);
-        // })
+        layui.use(['element','layer','form'], function(){
+            $ = layui.jquery;//jquery
+            lement = layui.element();//面包导航
+            layer = layui.layer;//弹出层
+            form = layui.form();
+            okLoading.close($);
+        })
     </script>
 </html>

@@ -14,13 +14,15 @@
     <script type="text/javascript" src="lib/loading/okLoading.js"></script>
     <link rel="stylesheet" href="css/main.css" media="all">
     <link rel="stylesheet" href="./css/font.css">
+    <!--导入ElementUI样式列表，css样式一般都在页面头部-->
+    <link rel="stylesheet" href="/css/index.css">
 </head>
 <style>
     .show_list{display: block;}
     .hide_lits{display: none;}
 </style>
 <body>
-<div class="layui-layout layui-layout-admin">
+<div class="layui-layout layui-layout-admin" id="app">
     <div class="layui-header header header-demo">
         <div class="layui-main">
             <div class="admin-logo-box">
@@ -165,7 +167,6 @@
 
 <script src="lib/layui/layui.js" charset="utf-8"></script>
 <script src="js/main.js"></script>
-<!--<script src="js/dropdown.js"></script>-->
 <script src="js/jquery.min.js"></script>
 <script src="js/x-layui.js" charset="utf-8"></script>
 
@@ -178,9 +179,10 @@
         $(""+table+"").removeClass("hide_lits");
         $(""+table+"").addClass("show_list");
     })
+
+
 </script>
 <script>
-	
     layui.use(['laydate','element','laypage','layer'], function(){
         $ = layui.jquery;//jquery
         laydate = layui.laydate;//日期插件
@@ -196,13 +198,7 @@
      * 2019年8月17日19:43:15
      */
     function logout() {
-//		document.getElementById('admin').className += " layui-hide"; 
-//		document.getElementById('project').className += " layui-hide"; 
-//		document.getElementById('expert').className += " layui-hide"; 
- 		$("#admin").hide();
- 		$("#project").hide();
- 		$("#expert").hide();
- 		
+
         $.ajax({
             type:"post",
             url:"xxxxx",
@@ -225,7 +221,6 @@
     function one_set(title,url,w,h){
         x_admin_show(title,url,w,h);
     }
-    
 </script>
 <script>
     //顶部时间

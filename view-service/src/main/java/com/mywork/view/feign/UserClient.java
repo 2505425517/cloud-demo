@@ -14,6 +14,10 @@ public interface UserClient {
 //    @PostMapping("/user/find")
     @RequestMapping(value="/user/find",method=RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     List<User> findall();
+    @RequestMapping(value="/user/add",method=RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    boolean adduser(@RequestBody  User user);
+    @RequestMapping(value="/user/update",method=RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    boolean updateuser(@RequestBody  User user);
 
 //    @PostMapping("/user/findById/{userId}")
     @RequestMapping(value="/user/findById/{userId}",method=RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

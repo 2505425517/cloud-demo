@@ -2,6 +2,7 @@ package com.mywork.view.service;
 
 
 
+import com.mywork.view.common.Result;
 import com.mywork.view.pojo.User;
 
 import com.mywork.view.feign.UserClient;
@@ -21,7 +22,6 @@ import java.util.List;
 @Service
 public class ViewServiceImpl implements ViewService {
 
-    private static final int VERSION_CHECK_READ_TIMEOUT = 100;
 //    @Autowired
 //    private RestTemplate restTemplate;
 
@@ -46,7 +46,26 @@ public class ViewServiceImpl implements ViewService {
 
     @Autowired
     private UserClient userClient;
-
+    @Override
+    public Result updateUser(@RequestBody User user) {
+//        1.远程查询
+        String url = "http://userservice/user/update/";
+        Result flag = restTemplate.postForObject(url, user, Result.class);
+//        boolean flag = userClient.adduser(user);
+//        System.out.println(user);
+        System.out.println(user.toString());
+        return flag;
+    }
+    @Override
+    public Result addUser(@RequestBody User user) {
+        //1.远程查询
+        String url = "http://userservice/user/add/";
+        Result flag = restTemplate.postForObject(url, user, Result.class);
+//        boolean flag = userClient.adduser(user);
+        System.out.println(user);
+        System.out.println(user.toString());
+        return flag;
+    }
     @Override
     public User test(@RequestBody Integer id) {
         //1.远程查询
