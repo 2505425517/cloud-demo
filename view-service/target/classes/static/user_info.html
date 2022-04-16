@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="css/main.css" media="all">
         <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" media="all">
         <link rel="stylesheet" href="lib/bootstrap/js/bootstrap.min.js" media="all">
+        <script type="text/javascript" src="/lib/loading/okLoading.js"></script>
         <!--导入ElementUI样式列表，css样式一般都在页面头部-->
 		<link rel="stylesheet" href="/css/index.css">	
    </head>
@@ -34,7 +35,7 @@
                        	欢迎使用专家库管理系统！<span class="f-14">v1.0</span> &nbsp;&nbsp;&nbsp;&nbsp;您上次登入的时间为：2022-4-1
             </blockquote>
         	</div>
-         </div>
+            </div>
          
              <fieldset class="layui-elem-field layui-field-title site-title">
               <!--<legend><a name="default">信息统计</a></legend>-->
@@ -62,7 +63,7 @@
                             <tr>
                                 <th>用户姓名</th>
 <!--                                <td><span id="lbServerName">张三</span></td>-->
-                                <td><span id="lbServerName">{{userinfo.name}}</span></td>
+                                <td><span id="lbServerName">{{this.userinfo.name}}</span></td>
                             </tr>
                             <tr>
                                 <td>年龄</td>
@@ -194,6 +195,7 @@
                 </section>
         </div>
         <div class="col-sm-2"></div>
+        </div>
 
         <div class="layui-footer footer footer-demo">
             <div class="layui-main">
@@ -202,8 +204,8 @@
                         Copyright ©2017 17sucai.com All Rights Reserved.
                     </a>
                 </p>
-                
             </div>
+        </div>
         </div>
     </body>
 
@@ -224,21 +226,28 @@
         var app = new Vue({
             el:"#app",
             data:{
-                id:1,
-                userinfo:[]
+                userinfo: {userid:3}
             },
             methods:{
                 getKeyfromURL (name) {
                     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null
                 },
+                getQueryString(name){
+                    let reg = `(^|&)${name}=([^&]*)(&|$)`
+                    let r = window.location.search.substr(1).match(reg);
+                    if (r != null) return unescape(r[2]); return null;
+                },
                 search(){
-                    id = this.getKeyfromURL("userid");
-                    console.log(id);
-                    // id = this.$route.query.userid;
-                    // alert(id);
-                    axios.get("/view/user/"+id).then((res)=>{
-                        app.userinfo = res.data;
-                        console.log(app.userinfo);
+                    if (this.userinfo.userid ==null) this.userinfo.userid=5;  //测试阶段用
+                    axios.get("/user/"+this.userinfo.userid).then((res)=>{
+                        console.log("1");
+                        console.log(res.data);
+                        console.log("2");
+                        console.log(res.data.data);  //！！！！！！注意别写错为date了，这里是data！！！！！！
+                        this.userinfo = res.data.data;
+                        // console.log(this.userinfo);
+                        console.log("3");
+                        console.log(this.userinfo);
                     });
                 }
             },
@@ -254,17 +263,19 @@
                     });
                 });
                 //初始页面获取列表信息
+                this.userinfo.userid = this.getQueryString("userid");
+                alert("userid = "+ this.userinfo.userid);
                 this.search();
             }
         });
     </script>
-    <script>
-        layui.use(['element','layer','form'], function(){
-            $ = layui.jquery;//jquery
-            lement = layui.element();//面包导航
-            layer = layui.layer;//弹出层
-            form = layui.form();
-            okLoading.close($);
-        })
-    </script>
+<!--    <script>-->
+<!--        layui.use(['element','layer','form'], function(){-->
+<!--            $ = layui.jquery;//jquery-->
+<!--            lement = layui.element();//面包导航-->
+<!--            layer = layui.layer;//弹出层-->
+<!--            form = layui.form();-->
+<!--            okLoading.close($);-->
+<!--        })-->
+<!--    </script>-->
 </html>

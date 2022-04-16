@@ -36,13 +36,69 @@ public class UserServiceImpl  implements UserService {
         String url2 = "http://expertservice/study/find/" + thisuser.getUserid();
 
         Career[] careers = restTemplate.getForObject(url, Career[].class);
-        Study[] studys = restTemplate.getForObject(url, Study[].class);
+        Study[] studys = restTemplate.getForObject(url2, Study[].class);
 //        List<Career> careers =  restTemplate.getForObject(url,Career.class);
         thisuser.setCareers(Arrays.asList(careers));
         thisuser.setStudys(Arrays.asList(studys));
         // 4.返回
         return thisuser;
     }
+
+    @Override
+    @ResponseBody
+    public List<User> findAll() {
+        List<User> users = userMapper.selectAll();
+        return users;
+    }
+
+    @Override
+    public Boolean add(User user) {
+        int row = userMapper.insert(user);
+        if(row>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    @ResponseBody
+    public User findById(@RequestBody Integer id) {
+        return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Boolean update(User User) {
+        int row = userMapper.updateByPrimaryKeySelective(User);
+        if(row>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean del(List<Integer> ids) {
+        for (Integer id:ids) {
+            userMapper.deleteByPrimaryKey(id);
+        }
+        return true;
+    }
+
+
+//    @Override
+//    public Boolean updateStatus(String status, Integer id) {
+//        User User = new User();
+//        User.setId(id);
+//        User.setStatus(status);
+//        int row = UserMapper.updateByPrimaryKeySelective(User);
+//        if(row>0){
+//            return true;
+//        }else{
+//            return false;
+//        }
+//    }
+//
 //    @Override
 //    @ResponseBody
 //    public User querycareerById(@RequestBody Integer userId) {
@@ -57,13 +113,6 @@ public class UserServiceImpl  implements UserService {
 //        // 4.返回
 //        return thisuser;
 //    }
-
-    @Override
-    @ResponseBody
-    public List<User> findAll() {
-        List<User> users = userMapper.selectAll();
-        return users;
-    }
 //    @Override
 //    public User[] findAll() {
 //         users = userMapper.selectAll();
@@ -74,8 +123,7 @@ public class UserServiceImpl  implements UserService {
 //    public Page<User> search(Map searchMap) {
 //        return null;
 //    }
-
-//    @Override
+    //    @Override
 //    public Boolean add(User expert) {
 //        return null;
 //    }
@@ -120,51 +168,4 @@ public class UserServiceImpl  implements UserService {
 //        return communities;
 //    }
 //
-    @Override
-    public Boolean add(User user) {
-        int row = userMapper.insert(user);
-        if(row>0){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    @Override
-    @ResponseBody
-    public User findById(@RequestBody Integer id) {
-        return userMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    public Boolean update(User User) {
-        int row = userMapper.updateByPrimaryKeySelective(User);
-        if(row>0){
-            return true;
-        }else{
-            return false;
-        }
-    }
-//
-//    @Override
-//    public Boolean updateStatus(String status, Integer id) {
-//        User User = new User();
-//        User.setId(id);
-//        User.setStatus(status);
-//        int row = UserMapper.updateByPrimaryKeySelective(User);
-//        if(row>0){
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
-//
-    @Override
-    public Boolean del(List<Integer> ids) {
-        for (Integer id:ids) {
-            userMapper.deleteByPrimaryKey(id);
-        }
-        return true;
-    }
-
 }

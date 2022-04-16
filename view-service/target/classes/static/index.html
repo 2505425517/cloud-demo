@@ -165,10 +165,8 @@
 
 <script src="lib/layui/layui.js" charset="utf-8"></script>
 <script src="js/main.js"></script>
-<!--<script src="js/dropdown.js"></script>-->
 <script src="js/jquery.min.js"></script>
 <script src="js/x-layui.js" charset="utf-8"></script>
-<script src="lib/layui/layui.js" charset="utf-8"></script>
 
 <script>
     $(".daohang").click(function(){
@@ -179,6 +177,8 @@
         $(""+table+"").removeClass("hide_lits");
         $(""+table+"").addClass("show_list");
     })
+
+
 </script>
 <script>
     layui.use(['laydate','element','laypage','layer'], function(){
@@ -191,19 +191,12 @@
         //以上模块根据需要引入
 
     });
-
     /**
      * 退出登陆
      * 2019年8月17日19:43:15
      */
     function logout() {
-//		document.getElementById('admin').className += " layui-hide"; 
-//		document.getElementById('project').className += " layui-hide"; 
-//		document.getElementById('expert').className += " layui-hide"; 
- 		$("#admin").hide();
- 		$("#project").hide();
- 		$("#expert").hide();
- 		
+
         $.ajax({
             type:"post",
             url:"xxxxx",
@@ -226,7 +219,6 @@
     function one_set(title,url,w,h){
         x_admin_show(title,url,w,h);
     }
-    
 </script>
 <script>
     //顶部时间
