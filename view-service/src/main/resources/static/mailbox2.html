@@ -146,7 +146,7 @@
     var app = new Vue({
         el:"#app",//声明当前Vue在页面的作用域
         data:{
-            fromusername:"",
+            // fromusername:"",
             checkedIDs:[],
             messageList:[],
             total:10,
@@ -181,19 +181,21 @@
             }
         },
         methods:{
-            getusername(id){
+            async getusername(id){
                 let name='gg';
                 console.log("不加this => "+ name);
                 console.log("加了this => "+ this.name);
-                axios.get("/user/"+id).then((res)=>{
-                    // fromusername = res.data.data.name;
+                await axios.get("/user/"+id).then((res)=>{
                     name = res.data.data.name;
                     console.log("不加this获取后1 => "+ name);
+                    console.log("gg"+name);
                     // callback(name);
-                    return name;
+                    return name.toString();
+                }).catch(err => {
+                    console.log(err);
                 });
-
                 console.log("不加this获取后2 => "+ name);
+
                 // return name;
             },
             //分页条件查询小区列表
