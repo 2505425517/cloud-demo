@@ -121,7 +121,7 @@ public class UserServiceImpl  implements UserService {
 //    }
 //
     @Override
-    public Boolean add( User user) {
+    public Boolean add(User user) {
         int row = userMapper.insert(user);
         if(row>0){
             return true;
@@ -137,7 +137,7 @@ public class UserServiceImpl  implements UserService {
     }
 
     @Override
-    public Boolean update( User User) {
+    public Boolean update(User User) {
         int row = userMapper.updateByPrimaryKeySelective(User);
         if(row>0){
             return true;

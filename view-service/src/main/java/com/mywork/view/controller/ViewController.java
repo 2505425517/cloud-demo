@@ -1,9 +1,10 @@
 package com.mywork.view.controller;
 
 
-
-
+import com.mywork.view.common.MessageConstant;
 import com.mywork.view.common.Result;
+import com.mywork.view.common.StatusCode;
+
 import com.mywork.view.pojo.User;
 import com.mywork.view.service.ViewService;
 import com.mywork.view.service.ViewServiceImpl;
@@ -50,19 +51,5 @@ public class ViewController {
         System.out.println(users);
 //        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,user);
         return users;
-    }
-    @PostMapping ("/adduser")
-    public Result adduser(@RequestBody  User user ){
-        Result result = viewService.addUser(user);
-        System.out.println(user);
-//        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,user);
-        return result;
-    }
-    @PostMapping("/updateuser")
-    public Result updateuser(@RequestBody  User user ){
-        Result result = viewService.updateUser(user);
-        System.out.println(user);
-//        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,user);
-       return result;
     }
 }

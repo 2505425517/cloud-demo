@@ -3,7 +3,6 @@ package com.mywork.user.controller;
 
 
 import com.github.pagehelper.Page;
-import com.mywork.expert.pojo.Career;
 import com.mywork.user.common.MessageConstant;
 import com.mywork.user.pojo.User;
 import com.mywork.user.service.UserService;
@@ -67,18 +66,13 @@ public class UserController {
 //        Page<User> page = userService.search(searchMap);
 //        return new PageResult(true, com.mywork.user.common.StatusCode.OK, MessageConstant.COMMUNITY_SEARCH_SUCCESS,page.getResult(),page.getTotal());
 //    }
-    @RequestMapping("/add")
-    public Result add(@RequestBody User user){
-        Boolean add = userService.add(user);
-        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_ADD_SUCCESS);
-    }
 
-//    @PostMapping("/add")
-//    public boolean add(@RequestBody User user){
-//        System.out.println(user.getName());
-//        Boolean add = userService.add(user);
-//        return add;
-//    }
+    @RequestMapping("/add")
+    public com.mywork.user.common.Result add(@RequestBody User user){
+        System.out.println(user.getName());
+        Boolean add = userService.add(user);
+        return new Result(true, StatusCode.OK,MessageConstant.COMMUNITY_ADD_SUCCESS);
+    }
     @RequestMapping("/findById/{userId}")
     @PostMapping("/findById/{userId}")
     public Result findById( @RequestBody @PathVariable("userId") Integer userId){
@@ -87,23 +81,19 @@ public class UserController {
         System.out.println(user);
         return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,user);
     }
+
     @RequestMapping("/update")
     public Result update(@RequestBody User user){
         Boolean add = userService.update(user);
         return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_UPDATE_SUCCESS);
     }
-//    @RequestMapping("/update")
-//    public boolean update(@RequestBody User user){
-//        boolean update = userService.update(user);
-//        return update;
-//    }
 //    // /community/updateStatus/0/1
 //    @RequestMapping("/updateStatus/{status}/{id}")
 //    public Result updateStatus(@PathVariable("status") String status,@PathVariable("id") Integer id){
 //        Boolean flag = userService.updateStatus(status,id);
 //        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_UPDATE_STATUS_SUCCESS);
 //    }
-    @PostMapping("/del")
+    @RequestMapping("/del")
     public Result del(@RequestBody List<Integer> ids){
         Boolean flag = userService.del(ids);
         return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_DELETE_SUCCESS);
