@@ -85,7 +85,7 @@
             </td>
             <td>{{message.messageid}}</td>
             <td>{{message.messageType}}</td>
-            <td>{{message.messageFromid}}</td>
+            <td>{{message.messageFromusername}}</td>
 <!--            <td class="td-messageFromid">-->
 <!--                <span class="td-username">-->
 <!--                    {{getusername(message.messageFromid)}}-->
@@ -181,29 +181,41 @@
             }
         },
         methods:{
-            async getusername(id){
-                let name='gg';
-                console.log("不加this => "+ name);
-                console.log("加了this => "+ this.name);
-                await axios.get("/user/"+id).then((res)=>{
-                    name = res.data.data.name;
-                    console.log("不加this获取后1 => "+ name);
-                    console.log("gg"+name);
-                    // callback(name);
-                    return name.toString();
-                }).catch(err => {
-                    console.log(err);
-                });
-                console.log("不加this获取后2 => "+ name);
-
+            readname(){
+              this.getusername();
+            },
+             async getusername(){
+                for (const message of this.messageList) {
+                    const index = this.messageList.indexOf(message);
+                     await axios.get("/user/"+message.messageFromid).then((res)=>{
+                        this.$set(message,'messageFromusername', res.data.data.name);
+                         console.log(message.messageFromusername);
+                    }).catch(err => {  console.log(err);} );
+                }
+                //
+                // let name='gg';
+                // console.log("不加this => "+ name);
+                // console.log("加了this => "+ this.name);
+                // await axios.get("/user/"+id).then((res)=>{
+                //     name = res.data.data.name;
+                //     console.log("不加this获取后1 => "+ name);
+                //     console.log("gg"+name);
+                //     // callback(name);
+                //     return name.toString();
+                // }).catch(err => {
+                //     console.log(err);
+                // });
+                // console.log("不加this获取后2 => "+ name);
                 // return name;
             },
             //分页条件查询小区列表
-            search(){
-                axios.post("/message/search",this.searchMap).then((res)=>{
+            async search(){
+                await axios.post("/message/search",this.searchMap).then((res)=>{
                     app.messageList = res.data.data;
                     app.total = res.data.total;
                 });
+                this.readname();
+                console.log(this.messageList);
             },
             //单个删除
             del_one(id){
@@ -410,6 +422,7 @@
             });
             //初始页面获取小区列表信息
             this.search();
+            this.readname();
         }
     });
 
