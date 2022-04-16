@@ -1,0 +1,49 @@
+@startuml
+interface com.mywork.project.mapper.ProjectMapper {
+}
+interface com.mywork.project.service.ProjectService {
++ List<Project> findAll()
++ Boolean add(Project)
++ Project findById(Integer)
++ Boolean update(Project)
++ Boolean del(List<Integer>)
+}
+class com.mywork.project.pojo.Project {
+- Integer projectid
+- String project_name
+- String project_info
+- String project_resource
+- String project_scheme
+- Integer expert_num
+- String project_starttime
+- String project_endtime
+- Integer project_status
+- String concept
+- String project_result
+
+}
+class com.mywork.project.service.ProjectServiceImpl {
+- ProjectMapper projectMapper
++ List<Project> findAll()
++ Boolean add(Project)
++ Project findById(Integer)
++ Boolean update(Project)
++ Boolean del(List<Integer>)
+}
+class com.mywork.project.controller.ProjectController {
+- ProjectServiceImpl projectService
++ Result findAll()
++ Result add(Project)
++ Result findById(Integer)
++ Result update(Project)
++ Result del(List<Integer>)
+}
+com.mywork.project.pojo.Project -[hidden]> com.mywork.project.controller.ProjectController
+com.mywork.project.controller.ProjectController ..> com.mywork.project.pojo.Project
+com.mywork.project.controller.ProjectController ..> com.mywork.project.service.ProjectService
+com.mywork.project.service.ProjectServiceImpl ..>  com.mywork.project.mapper.ProjectMapper
+com.mywork.project.mapper.ProjectMapper -[hidden]>  com.mywork.project.service.ProjectServiceImpl
+com.mywork.project.controller.ProjectController -[hidden]>  com.mywork.project.service.ProjectService
+tk.mybatis.mapper.common.Mapper <|-- com.mywork.project.mapper.ProjectMapper
+com.mywork.project.service.ProjectService <|.. com.mywork.project.service.ProjectServiceImpl
+@enduml

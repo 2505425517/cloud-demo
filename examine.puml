@@ -1,0 +1,51 @@
+@startuml
+class com.mywork.examine.pojo.Examine {
+- Integer examineid
+- Integer userid
+- Integer projectid
+- Integer examineStatus
+- Integer examineResult
+- String examineSuggest
++ getter() and setter()
+
+}
+class com.mywork.examine.controller.ExamineController {
+- ExamineServiceImpl examineService
++ Result findAll()
++ Result add(Examine)
++ Result findById(Integer)
++ Result findByProjectId(Integer)
++ Result update(Examine)
++ Result del(List<Integer>)
+}
+interface com.mywork.examine.mapper.ExamineMapper {
++ List<Examine> selectbyprojectid(Integer)
++ List<Examine> selectbyuserid(Integer)
+}
+class com.mywork.examine.service.ExamineServiceImpl {
+- ExamineMapper examineMapper
++ List<Examine> findAll()
++ Boolean add(Examine)
++ List<Examine> findByUserId(Integer)
++ List<Examine> findByProjectId(Integer)
++ Boolean update(Examine)
++ Boolean del(List<Integer>)
+}
+interface com.mywork.examine.service.ExamineService {
++ List<Examine> findAll()
++ Boolean add(Examine)
+~ List<Examine> findByUserId(Integer)
+~ List<Examine> findByProjectId(Integer)
++ Boolean update(Examine)
++ Boolean del(List<Integer>)
+}
+com.mywork.examine.controller.ExamineController ..> com.mywork.examine.pojo.Examine
+com.mywork.examine.controller.ExamineController ..> com.mywork.examine.service.ExamineService
+com.mywork.examine.service.ExamineServiceImpl ..> com.mywork.examine.mapper.ExamineMapper
+com.mywork.examine.service.ExamineService -[hidden]> com.mywork.examine.controller.ExamineController
+'com.mywork.examine.controller.ExamineController -[hidden]> com.mywork.examine.pojo.Examine
+'com.mywork.examine.service.ExamineServiceImpl -[hidden]> com.mywork.examine.mapper.ExamineMapper
+
+tk.mybatis.mapper.common.Mapper <|-- com.mywork.examine.mapper.ExamineMapper
+com.mywork.examine.service.ExamineService <|.. com.mywork.examine.service.ExamineServiceImpl
+@enduml
