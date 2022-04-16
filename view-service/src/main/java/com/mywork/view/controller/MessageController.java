@@ -1,13 +1,13 @@
-package com.mywork.message.controller;
+package com.mywork.view.controller;
 
 
 import com.github.pagehelper.Page;
-import com.mywork.message.common.PageResult;
-import com.mywork.message.common.StatusCode;
-import com.mywork.message.service.MessageServiceImpl;
-import com.mywork.message.common.MessageConstant;
-import com.mywork.message.common.Result;
-import com.mywork.message.pojo.Message;
+import com.mywork.view.common.MessageConstant;
+import com.mywork.view.common.PageResult;
+import com.mywork.view.common.Result;
+import com.mywork.view.common.StatusCode;
+import com.mywork.view.pojo.Message;
+import com.mywork.view.service.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,31 +30,29 @@ public class MessageController {
 
     @RequestMapping("/search")
     public PageResult search(@RequestBody Map searchMap){
-        Page<Message> page = messageService.search(searchMap);
-        return new PageResult(true, StatusCode.OK, MessageConstant.COMMUNITY_SEARCH_SUCCESS,page.getResult(),page.getTotal());
+        PageResult page = messageService.search(searchMap);
+        return page;
     }
-
     @RequestMapping("/find")
     public Result findAll() {
-        // 根据id查询订单并返回
-        List<Message> messages = messageService.findAll();
-        return new Result(true, StatusCode.OK,MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,messages);
+        Result page = messageService.findAll();
+        return page;
     }
     @RequestMapping("/add")
     public Result add(@RequestBody Message message){
-        Boolean add = messageService.add(message);
-        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS);
+        Result add = messageService.add(message);
+        return add;
     }
     @RequestMapping("/findById/{userId}")
     public Result findById(@PathVariable("userId") Integer userid){
-        List<Message> messages = messageService.findByUserId(userid);
-        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,messages);
+        Result page = messageService.findByUserId(userid);
+        return page;
     }
 
     @RequestMapping("/update")
     public Result update(@RequestBody Message message){
-        Boolean update = messageService.update(message);
-        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_UPDATE_SUCCESS);
+        Result update = messageService.update(message);
+        return update;
     }
 //    // /community/updateStatus/0/1
 //    @RequestMapping("/updateStatus/{status}/{id}")
@@ -64,7 +62,7 @@ public class MessageController {
 //    }
     @RequestMapping("/del")
     public Result del(@RequestBody List<Integer> ids){
-        Boolean flag = messageService.del(ids);
-        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_DELETE_SUCCESS);
+        Result del = messageService.del(ids);
+        return del;
     }
 }
