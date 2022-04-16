@@ -31,7 +31,7 @@ public class MessageServiceImpl implements MessageService {
         Example example = new Example(Message.class);//指定查询的表tb_Project
         //1.初始化分页条件
         int pageNum = 1;
-        int pageSize = 2;
+        int pageSize = 5;
         if(searchMap != null){
             Example.Criteria criteria = example.createCriteria();//创建查询条件
             //时间区间
@@ -42,8 +42,8 @@ public class MessageServiceImpl implements MessageService {
                 criteria.andLessThanOrEqualTo("messageTime",searchMap.get("endTime"));
             }
             //名称模糊搜索
-            if(StringUtil.isNotEmpty((String) searchMap.get("date"))){
-                criteria.andLike("messageDate", "%"+(String) searchMap.get("date")+"%");
+            if(StringUtil.isNotEmpty((String) searchMap.get("data"))){
+                criteria.andLike("messageData", "%"+(String) searchMap.get("data")+"%");
             }
             //分页
 //            if(StringUtil.isNotEmpty((String) searchMap.get("pageNum"))){

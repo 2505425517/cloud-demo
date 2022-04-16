@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        新增邮件
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="/css/main.css" media="all">
+    <script type="text/javascript" src="/lib/loading/okLoading.js"></script>
+    <!-- 引入ElementUI样式 -->
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+<div id="app">
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+              <a><cite>首页</cite></a>
+              <a><cite>通知管理</cite></a>
+              <a><cite>{{title}}</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body">
+    <el-form :model="message" :rules="rules" ref="messageFormRef" label-width="120px" class="demo-ruleForm">
+        <el-form-item label="邮件类型" prop="name">
+            <el-input v-model="message.type"></el-input>
+        </el-form-item>
+        <el-form-item label="发件人id" prop="fromid">
+            <el-input v-model="message.messageFromid" :disabled="true" ></el-input>
+        </el-form-item>
+        <el-form-item label="收件人id" prop="getid">
+            <el-input v-model="message.messageGetid"></el-input>
+        </el-form-item>
+        <el-form-item label="信息内容" prop="data">
+            <el-input
+                    type="textarea"
+                    :rows="5"
+                    v-model="message.messageData">
+
+            </el-input>
+        </el-form-item>
+
+
+        <el-form-item label="附件上传" prop="thumbnail">
+<!--            <el-upload-->
+<!--                    class="upload-demo"-->
+<!--                    action="/estate/fileupload"-->
+<!--                    :on-preview="handlePreview"-->
+<!--                    :on-remove="handleRemove"-->
+<!--                    :on-success="handleSuccess"-->
+<!--                    :file-list="fileList"-->
+<!--                    list-type="picture">-->
+<!--                <el-button size="small" type="primary">点击上传</el-button>-->
+<!--                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10M</div>-->
+<!--            </el-upload>-->
+            <el-upload
+                    class="upload-demo"
+                    drag
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    multiple>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="save()" style="text-align: center">保存</el-button>
+            <el-button @click="clearAll()" style="text-align: center">重置</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+</div>
+<script src="lib/layui/layui.js" charset="utf-8"></script>
+<script src="js/x-layui.js" charset="utf-8"></script>
+<!--导入Vue依赖包-->
+<script src="/js/vue.js" charset="utf-8"></script>
+<!-- 引入Element组件库 -->
+<script src="/js/index.js"></script>
+<!--导入Axios依赖包-->
+<script src="/js/axios.js" charset="utf-8"></script>
+<!--<script>-->
+<!--    export default {-->
+<!--        data() {-->
+<!--            return {-->
+<!--                textarea: ''-->
+<!--            }-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+<script type="text/javascript">
+    var app = new Vue({
+        el:"#app",
+        data:{
+            title:"新增邮件",
+            message:{thumbnail:"",messageFromid:3},
+            fileList:[],
+            rules: {
+                // name: [
+                //     { required: true, message: '请输入小区名称', trigger: 'blur' },
+                //     { max: 50, message: '长度小于50个字符', trigger: 'blur' }
+                // ],
+                // code: [
+                //     { required: true, message: '请输入小区名称', trigger: 'blur' },
+                //     { min: 11,max: 20, message: '长度必须大于11、小于20个字符', trigger: 'blur' }
+                // ],
+                // thumbnail:[
+                //     { required: true, message: '请上传小区缩略图', trigger: 'change' }
+                // ]
+            }
+        },
+        methods:{
+            findById(){
+                axios.get("/message/findById?id="+this.message.messageid).then((res)=>{
+                    this.message = res.data.data;
+                    this.fileList.push({url:"http://localhost/estate"+this.community.thumbnail});
+                });
+            },
+            handleSuccess(response, file, fileList){
+                this.message.thumbnail=response.data;
+            },
+            handleRemove() {
+                axios.get("/estate/delfile?fileName="+this.message.thumbnail).then((res)=>{
+                    app.message.thumbnail="";
+                    if(res.data.flag){
+                        app.fileList=[];
+                        this.$message({
+                            message: '图片删除成功',
+                            type: 'success'
+                        });
+                    }
+                });
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
+            handleExceed(files, fileList) {
+                this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            //文件删除提示
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${ file.name }？`);
+            },
+            //表达重置
+            clearAll() {
+                this.$refs.messageFormRef.resetFields();
+                if(this.fileList.length>0) {
+                    this.handleRemove();
+                }
+            },
+            save(){
+                var method = "";
+                if(this.community.id != null){
+                    method = "update"
+                }else{
+                    method = "add"
+                }
+                axios.post("/message/"+method,this.message).then((res)=>{
+                    if(res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                    }
+                });
+            },
+            imgUrl(){
+                return "http://localhost/estate"+app.community.thumbnail;
+            },
+            getQueryString(name){
+                let reg = `(^|&)${name}=([^&]*)(&|$)`
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        },
+        created:function(){
+            layui.use(['element','layer','form'], function(){
+                $ = layui.jquery;//jquery
+                lement = layui.element();//面包导航
+                layer = layui.layer;//弹出层
+                form = layui.form();
+                okLoading.close($);
+            });
+            this.message.messageFromid = 4;
+            //获取父页面传递参数，小区ID
+            // this.message.id = this.getQueryString("id");
+            //根据小区ID获取小区对象，进行数据回显
+            // if(this.community.id != null && this.community.id != ''){
+            //     this.title="修改小区";
+            //     this.findById();
+            // }
+        }
+    });
+</script>
+</body>
+</html>

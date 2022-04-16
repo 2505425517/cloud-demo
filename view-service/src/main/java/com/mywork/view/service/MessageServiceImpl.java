@@ -34,7 +34,7 @@ public class MessageServiceImpl implements MessageService {
         //1.远程查询
         String url = "http://messageservice/message/search/" ;
         PageResult page =  restTemplate.postForObject(url, searchMap ,PageResult.class);
-        System.out.println(page);
+        System.out.println(searchMap);
         return page;
     }
 

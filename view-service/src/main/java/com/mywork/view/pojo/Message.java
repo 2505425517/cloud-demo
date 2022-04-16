@@ -11,7 +11,7 @@ public class Message {
     private String messageType;
     private Integer messageFromid;
     private Integer messageGetid;
-    private String messageDate;
+    private String messageData;
     private Date messageTime;
     private Integer messageStatus;
 
@@ -47,12 +47,12 @@ public class Message {
         this.messageGetid = messageGetid;
     }
 
-    public String getMessageDate() {
-        return messageDate;
+    public String getMessageData() {
+        return messageData;
     }
 
-    public void setMessageDate(String messageDate) {
-        this.messageDate = messageDate;
+    public void setMessageData(String messageData) {
+        this.messageData = messageData;
     }
 
     public Date getMessageTime() {
