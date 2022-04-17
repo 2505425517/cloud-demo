@@ -1,11 +1,10 @@
-package com.mywork.expert.controller;
+package com.mywork.view.controller;
 
 
-import com.mywork.expert.common.MessageConstant;
-import com.mywork.expert.common.Result;
-import com.mywork.expert.common.StatusCode;
-import com.mywork.expert.pojo.Career;
-import com.mywork.expert.service.ExpertCareerServiceImpl;
+
+import com.mywork.view.common.Result;
+import com.mywork.view.pojo.Career;
+import com.mywork.view.service.ExpertCareerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,29 +22,27 @@ import java.util.List;
 public class ExpertCareerController {
     
     @Autowired
-    private ExpertCareerServiceImpl expertCareerService;
+    private ExpertCareerService expertCareerService;
 
 
     @RequestMapping("/find/{userId}")
     public List<Career> queryByUserId(@PathVariable("userId") Integer userid) {
-        // 根据id查询订单并返回
-        List<Career> all = expertCareerService.queryById(userid);
-//        return  new Result(true,StatusCode.OK,"请求成功",all);
-        return all;
+        return expertCareerService.queryById(userid);
     }
+//
     @RequestMapping("/add")
     public Result add(@RequestBody Career career){
-        Boolean add = expertCareerService.add(career);
-        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS);
+        Result add = expertCareerService.add(career);
+        return add;
     }
     @RequestMapping("/update")
     public Result update(@RequestBody Career career){
-        Boolean add = expertCareerService.update(career);
-        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_UPDATE_SUCCESS);
+        Result update = expertCareerService.update(career);
+        return update;
     }
     @RequestMapping("/del")
     public Result del(@RequestBody List<Integer> ids){
-        Boolean flag = expertCareerService.del(ids);
-        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_DELETE_SUCCESS);
+        Result del = expertCareerService.del(ids);
+        return del;
     }
 }

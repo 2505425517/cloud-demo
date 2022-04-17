@@ -30,6 +30,7 @@ public class MessageController {
 
     @RequestMapping("/search")
     public PageResult search(@RequestBody Map searchMap){
+        System.out.println(searchMap);
         PageResult page = messageService.search(searchMap);
         return page;
     }

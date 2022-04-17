@@ -1,7 +1,7 @@
 package com.mywork.view.pojo;
 
-import com.mywork.user.pojo.Career;
-import com.mywork.user.pojo.Study;
+import com.mywork.view.pojo.Career;
+import com.mywork.view.pojo.Study;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,8 +26,27 @@ public class User implements Serializable {
     private String address;
     private String highestQualification;
     private String status;
-    private List<com.mywork.user.pojo.Career> careers;
-    private List<com.mywork.user.pojo.Study> studys;
+    private List<Career> careers;
+    private List<Study> studys;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userid=" + userid +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", mailAddress='" + mailAddress + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
+                ", precentcity='" + precentcity + '\'' +
+                ", address='" + address + '\'' +
+                ", highestQualification='" + highestQualification + '\'' +
+                ", status='" + status + '\'' +
+                ", careers=" + careers +
+                ", studys=" + studys +
+                '}';
+    }
 
     public Integer getUserid() {
         return userid;
@@ -117,7 +136,7 @@ public class User implements Serializable {
         this.status = status;
     }
 
-    public List<com.mywork.user.pojo.Career> getCareers() {
+    public List<Career> getCareers() {
         return careers;
     }
 
@@ -125,31 +144,12 @@ public class User implements Serializable {
         this.careers = careers;
     }
 
-    public List<com.mywork.user.pojo.Study> getStudys() {
+    public List<Study> getStudys() {
         return studys;
     }
 
     public void setStudys(List<Study> studys) {
         this.studys = studys;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userid=" + userid +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", gender='" + gender + '\'' +
-                ", nationality='" + nationality + '\'' +
-                ", mailAddress='" + mailAddress + '\'' +
-                ", phoneNum='" + phoneNum + '\'' +
-                ", precentcity='" + precentcity + '\'' +
-                ", address='" + address + '\'' +
-                ", highestQualification='" + highestQualification + '\'' +
-                ", status='" + status + '\'' +
-                ", careers=" + careers +
-                ", studys=" + studys +
-                '}';
     }
 }
 

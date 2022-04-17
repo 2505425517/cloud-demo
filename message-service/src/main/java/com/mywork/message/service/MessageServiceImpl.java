@@ -45,6 +45,7 @@ public class MessageServiceImpl implements MessageService {
             if(StringUtil.isNotEmpty((String) searchMap.get("data"))){
                 criteria.andLike("messageData", "%"+(String) searchMap.get("data")+"%");
             }
+
             //分页
 //            if(StringUtil.isNotEmpty((String) searchMap.get("pageNum"))){
 //                pageNum = Integer.parseInt((String) searchMap.get("pageNum"));

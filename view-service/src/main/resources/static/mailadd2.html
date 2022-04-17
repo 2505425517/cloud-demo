@@ -29,7 +29,7 @@
 <div class="x-body">
     <el-form :model="message" :rules="rules" ref="messageFormRef" label-width="120px" class="demo-ruleForm">
         <el-form-item label="邮件类型" prop="name">
-            <el-input v-model="message.type"></el-input>
+            <el-input v-model="message.messageType"></el-input>
         </el-form-item>
         <el-form-item label="发件人id" prop="fromid">
             <el-input v-model="message.messageFromid" :disabled="true" ></el-input>
@@ -84,6 +84,8 @@
 <script src="/js/index.js"></script>
 <!--导入Axios依赖包-->
 <script src="/js/axios.js" charset="utf-8"></script>
+<!--引入时间插件包Momentjs-->
+<script src="/js/moment.min.js" charset="utf-8"></script>
 <!--<script>-->
 <!--    export default {-->
 <!--        data() {-->
@@ -98,7 +100,7 @@
         el:"#app",
         data:{
             title:"新增邮件",
-            message:{thumbnail:"",messageFromid:3},
+            message:{thumbnail:"",messageFromid:3,messageTime:""},
             fileList:[],
             rules: {
                 // name: [
@@ -153,9 +155,70 @@
                     this.handleRemove();
                 }
             },
+            //日期格式化方法
+            //date 要进行格式的日期 ；format 格式化的样式
+            dateFormat(date,format){
+                //默认格式化字符串"YYYY-MM-DD HH:mm:ss"
+                if(format == null || format == ''){
+                    format = "YYYY-MM-DD HH:mm:ss";
+                }
+                return moment(date).format(format);
+            },
+            formatDate(date, fmt) {
+                if (typeof date === 'string') {
+                    date = new Date(date.replace(/-/g, '/'))
+                }
+                if (/(y+)/.test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+                }
+                const o = {
+                    'M+': date.getMonth() + 1,
+                    'd+': date.getDate(),
+                    'h+': date.getHours(),
+                    'm+': date.getMinutes(),
+                    's+': date.getSeconds()
+                }
+                for (const k in o) {
+                    if (new RegExp(`(${k})`).test(fmt)) {
+                        const str = o[k] + ''
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str))
+                    }
+                }
+                return fmt
+            },
+            getLatestDate() {
+                var aData = new Date();
+                return this.formatDate(aData, 'yyyy-MM-dd hh:mm:ss'); //时间格式化
+            },
+            fillZero(str){
+                var realNum;
+                if(str<10){
+                    realNum	= '0'+str;
+                }else{
+                    realNum	= str;
+                }
+                return realNum;
+            },
+            getTime(){
+                var myDate = new Date();
+                var myYear = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+                var myMonth = myDate.getMonth()+1; //获取当前月份(0-11,0代表1月)
+                var myToday = myDate.getDate(); //获取当前日(1-31)
+                var myDay = myDate.getDay(); //获取当前星期X(0-6,0代表星期天)
+                var myHour = myDate.getHours(); //获取当前小时数(0-23)
+                var myMinute = myDate.getMinutes(); //获取当前分钟数(0-59)
+                var mySecond = myDate.getSeconds(); //获取当前秒数(0-59)
+                var week = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+                var nowTime;
+                nowTime = myYear+'-'+this.fillZero(myMonth)+'-'+this.fillZero(myToday)+'T'+this.fillZero(myHour)+':'+this.fillZero(myMinute)+':'+this.fillZero(mySecond);
+                console.log(nowTime);
+                return nowTime;
+            },
             save(){
                 var method = "";
-                if(this.community.id != null){
+                // this.$set(this.message,messageTime,this.messagegetLatestDate());
+                this.message.messageTime=this.getTime();
+                if(this.message.messageid != null){
                     method = "update"
                 }else{
                     method = "add"

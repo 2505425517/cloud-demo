@@ -1,5 +1,7 @@
 package com.mywork.message.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -12,6 +14,7 @@ public class Message {
     private Integer messageFromid;
     private Integer messageGetid;
     private String messageData;
+    //@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date messageTime;
     private Integer messageStatus;
 

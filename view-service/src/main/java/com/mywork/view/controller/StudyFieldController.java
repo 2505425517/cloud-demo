@@ -1,11 +1,9 @@
-package com.mywork.expert.controller;
+package com.mywork.view.controller;
 
 
-import com.mywork.expert.common.MessageConstant;
-import com.mywork.expert.common.Result;
-import com.mywork.expert.common.StatusCode;
-import com.mywork.expert.pojo.Study;
-import com.mywork.expert.service.StudyFieldServiceImpl;
+import com.mywork.view.common.Result;
+import com.mywork.view.pojo.Study;
+import com.mywork.view.service.StudyFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,27 +19,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/study")
 public class StudyFieldController {
-    
+
     @Autowired
-    private StudyFieldServiceImpl studyFieldService;
+    private StudyFieldService studyFieldService;
+
 
     @RequestMapping("/find/{userId}")
     public List<Study> queryByUserId(@PathVariable("userId") Integer userid) {
         return studyFieldService.queryById(userid);
     }
+    //    
     @RequestMapping("/add")
     public Result add(@RequestBody Study study){
-        Boolean add = studyFieldService.add(study);
-        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_ADD_SUCCESS);
+        Result add = studyFieldService.add(study);
+        return add;
     }
     @RequestMapping("/update")
     public Result update(@RequestBody Study study){
-        Boolean add = studyFieldService.update(study);
-        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_UPDATE_SUCCESS);
+        Result update = studyFieldService.update(study);
+        return update;
     }
     @RequestMapping("/del")
     public Result del(@RequestBody List<Integer> ids){
-        Boolean flag = studyFieldService.del(ids);
-        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_DELETE_SUCCESS);
+        Result del = studyFieldService.del(ids);
+        return del;
     }
 }

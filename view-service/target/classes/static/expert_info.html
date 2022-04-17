@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
     <head>
         <meta charset="utf-8">
         <title>
@@ -14,34 +14,40 @@
         <link rel="stylesheet" href="css/main.css" media="all">
         <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" media="all">
         <link rel="stylesheet" href="lib/bootstrap/js/bootstrap.min.js" media="all">
+        <!--导入ElementUI样式列表，css样式一般都在页面头部-->
+        <link rel="stylesheet" href="/css/index.css">
     </head>
     <body>
     <style type="text/css">
 	legend { display: block; width:100px; border-bottom:0px; font-family: "Microsoft YaHei","Helvetica Neue";}
 	legend a{ color:#666;} legend a:hover{ text-decoration:none;}
 	.layui-table{ font-family: "Microsoft YaHei","Helvetica Neue";}
+    .layui-table{ font-family: "Microsoft YaHei","Helvetica Neue";}
+    .is-selected { color: #1989FA;}
+    .el-calendar-table .el-calendar-day{ height: 55px;}
+    .el-timeline-item{padding-bottom:7px}
 	</style>
-		
+		<div id="app">
      	<div class="x-body" style="background-color: #f3f3f3; margin: auto;">
         	<div class="row" >
         		<div class="col-sm-2"></div>
         	<div class="col-sm-6">
         		<blockquote class="layui-elem-quote" >
-                       	欢迎您，系统认证专家：张三
+                       	欢迎您，系统认证专家：{{userinfo.name}}
             </blockquote>
         	</div>
          </div>
          
-             <fieldset class="layui-elem-field layui-field-title site-title">
-              <!--<legend><a name="default">信息统计</a></legend>-->
-            </fieldset>
-			<!--</div>-->
+         <fieldset class="layui-elem-field layui-field-title site-title">
+          <!--<legend><a name="default">信息统计</a></legend>-->
+        </fieldset>
+        <!--</div>-->
 			
   
         <!--相关统计-->
         <div class="row" >
  			<div class="col-sm-2"></div>
-			<div class="col-sm-4"  >
+			<div class="col-sm-3"  >
             <section class="panel" >
             	<!--style="min-height: 500px;"-->
                 <!--<div class="panel-heading"> </div>-->
@@ -57,39 +63,39 @@
                             <tbody>
                             <tr>
                                 <th>专家姓名</th>
-                                <td><span id="lbServerName">张三</span></td>
+                                <td><span id="lbServerName">{{userinfo.name}}</span></td>
                             </tr>
                             <tr>
                                 <td>年龄</td>
-                                <td>39</td>
+                                <td>{{userinfo.age}}</td>
                             </tr>
                             <tr>
                                 <td>性别</td>
-                                <td>男</td>
+                                <td>{{userinfo.gender}}</td>
                             </tr>
                             <tr>
                                 <td>国籍</td>
-                                <td>中国</td>
+                                <td>{{userinfo.nationality}}</td>
                             </tr>
                             <tr>
                                 <td>邮箱地址 </td>
-                                <td>zhangsan@stu.edu.cn</td>
+                                <td>{{userinfo.mailAddress}}</td>
                             </tr>
                             <tr>
                                 <td>联系方式</td>
-                                <td>13712938821</td>
+                                <td>{{userinfo.phoneNum}}</td>
                             </tr>
                             <tr>
                                 <td>现居城市 </td>
-                                <td>广东省汕头市</td>
+                                <td>{{userinfo.precentcity}}</td>
                             </tr>
                             <tr>
                                 <td>通讯地址</td>
-                                <td>汕头大学</td>
+                                <td>{{userinfo.address}}</td>
                             </tr>
                             <tr>
                                 <td>最高学位 </td>
-                                <td>博士</td>
+                                <td>{{userinfo.highestQualification}}</td>
                             </tr>
                             <!-- <tr>
                                 <td>服务器的语言种类 </td>
@@ -101,10 +107,40 @@
                 </div>
             </section>
         </div>
-        <div class="col-sm-4"  >
-            <section class="panel" style="min-height: 470px;>
-            	
-                
+        <div class="col-sm-5"  >
+            <section class="panel" style="min-height: 470px;">
+<!--                <el-calendar style="height:25px">-->
+<!--                    &lt;!&ndash; 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法&ndash;&gt;-->
+<!--                    <template-->
+<!--                            slot="dateCell"-->
+<!--                            slot-scope="{date, data}">-->
+<!--                        <p :class="data.isSelected ? 'is-selected' : ''">-->
+<!--                            {{ data.day.split('-').slice(1).join('-') }} {{ data.isSelected ? '✔️' : ''}}-->
+<!--                        </p>-->
+<!--                    </template>-->
+<!--                </el-calendar>-->
+                <div class="block" style="margin: 20px">
+                    <el-timeline>
+                        <el-timeline-item timestamp="--------------------" placement="top">
+                            <el-card>
+                                <h4>{{messageList[0].messageData}}</h4>
+                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>
+                            </el-card>
+                        </el-timeline-item>
+                        <el-timeline-item timestamp="--------------------" placement="top">
+                            <el-card>
+                                <h4>{{messageList[1].messageData}}</h4>
+                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>
+                            </el-card>
+                        </el-timeline-item>
+                        <el-timeline-item timestamp="--------------------" placement="top">
+                            <el-card>
+                                <h4>{{messageList[2].messageData}}</h4>
+                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>
+                            </el-card>
+                        </el-timeline-item>
+                    </el-timeline>
+                </div>
             </section>
         </div>
        
@@ -120,10 +156,11 @@
                     <div class="panel-heading" style="margin: auto;width:96%">专家从业信息</div>
                     <table class="layui-table" style="margin: auto;width:96%">
 						  <colgroup>
-						    <col width="150">
+                            <col width="300">
 						    <col width="200">
-						    <col width="150">
+						    <col width="200">
 						    <col width="300">
+						    <col width="150">
 						  </colgroup>
 						  <thead>
 						    <tr>
@@ -135,29 +172,38 @@
 						    </tr> 
 						  </thead>
 						  <tbody>
-						    <tr>
-						      <td>1999-04 至 2003-05</td>
-						      <td>有方科技有限公司</td>
-						      <td>后端工程师</td>
-						      <td>负责公司后端业务逻辑开发</td>
-						      <td>雷军</td>
-						    </tr>
-						    <tr>
-						      <td>2003-07 至 2008-07</td>
-						      <td>阿里巴巴公司</td>
-						      <td>算法工程师</td>
-						      <td>负责搜索业务的算法研发</td>
-						      <td>马云</td>
-						    </tr>
-						    <tr>
-						      <td>2008-09 至 2022-03</td>
-						      <td>汕头大学</td>
-						      <td>计算机系教授</td>
-						      <td>负责计算机专业的理论研究</td>
-						      <td>姜虹</td>
-						    </tr>
+                          <tr v-for="(career,index) in userinfo.careers">
+                              <td>{{career.jobStarttime.split(" ")[0]}} 至 {{career.jobEndtime.split(" ")[0]}} </td>
+                              <td>{{career.workUnit}}</td>
+                              <td>{{career.jobName}}</td>
+                              <td>{{career.jobInfo}}</td>
+                              <td>{{career.identify}}</td>
+                          </tr>
+<!--						    <tr>-->
+<!--						      <td>{{career.username}} 至 2003-05</td>-->
+<!--						      <td>有方科技有限公司</td>-->
+<!--						      <td>后端工程师</td>-->
+<!--						      <td>负责公司后端业务逻辑开发</td>-->
+<!--						      <td>雷军</td>-->
+<!--						    </tr>-->
+<!--						    <tr>-->
+<!--						      <td>2003-07 至 2008-07</td>-->
+<!--						      <td>阿里巴巴公司</td>-->
+<!--						      <td>算法工程师</td>-->
+<!--						      <td>负责搜索业务的算法研发</td>-->
+<!--						      <td>马云</td>-->
+<!--						    </tr>-->
+<!--						    <tr>-->
+<!--						      <td>2008-09 至 2022-03</td>-->
+<!--						      <td>汕头大学</td>-->
+<!--						      <td>计算机系教授</td>-->
+<!--						      <td>负责计算机专业的理论研究</td>-->
+<!--						      <td>姜虹</td>-->
+<!--						    </tr>-->
 						  </tbody>
 						</table>
+                    </br>
+                    </br>
 					<div class="panel-heading" style="margin: auto;width:96%">专家研究领域</div>
                     <table class="layui-table" style="margin: auto;width:96%">
 						  <colgroup>
@@ -172,23 +218,26 @@
 						    </tr> 
 						  </thead>
 						  <tbody>
-						    <tr>
-						      <td>自动驾驶领域</td>
-						      <td>智能汽车传感器感应自动避障功能的研究</td>
-						      <td>人工智能</td>
-						      
-						    </tr>
-						    <tr>
-						      <td>搜索算法</td>
-						      <td>大数据下搜索引擎的快速模糊搜索</td>
-						      <td>大数据</td>
-						      
-						    </tr>
-						    <tr>
-						      <td>人脸识别</td>
-						      <td>智能汽车与驾驶员</td>
-						      <td>物联网</td>
-						    </tr>
+                          <tr v-for="(study,index) in userinfo.studys">
+                              <td>{{study.fieldname}}</td>
+                              <td>{{study.fieldinfo}}</td>
+                              <td>{{study.concept}}</td>
+                          </tr>
+<!--						    <tr>-->
+<!--						      <td>自动驾驶领域</td>-->
+<!--						      <td>智能汽车传感器感应自动避障功能的研究</td>-->
+<!--						      <td>人工智能</td>-->
+<!--						    </tr>-->
+<!--						    <tr>-->
+<!--						      <td>搜索算法</td>-->
+<!--						      <td>大数据下搜索引擎的快速模糊搜索</td>-->
+<!--						      <td>大数据</td>-->
+<!--						    </tr>-->
+<!--						    <tr>-->
+<!--						      <td>人脸识别</td>-->
+<!--						      <td>智能汽车与驾驶员</td>-->
+<!--						      <td>物联网</td>-->
+<!--						    </tr>-->
 						  </tbody>
 						</table>             
 						
@@ -210,26 +259,6 @@
         </div>
         <div class="col-sm-2"></div>
         </div>
-        
-        
-    
-        <script src="lib/layui/layui.js" charset="utf-8"></script>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/echarts.min.js"></script>
-		
-	<script>
-		//注意：折叠面板 依赖 element 模块，否则无法进行功能性操作
-		layui.use('element', function(){
-		  var element = layui.element;
-		  
-		  //…
-		});
-</script>	
-    <script type="text/javascript">
-    
-        
-    
-            
         </div>
         <div class="layui-footer footer footer-demo">
             <div class="layui-main">
@@ -238,9 +267,88 @@
                         Copyright ©2017 17sucai.com All Rights Reserved.
                     </a>
                 </p>
-                
+
             </div>
         </div>
-        
+        </div>
+    <script src="lib/layui/layui.js" charset="utf-8"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <!--js脚本一般是放在页面尾部-->
+    <!--Vue js脚本-->
+    <script src="js/vue.js" charset="utf-8"></script>
+    <!--引入ElementUI组件库-->
+    <script src="js/index.js" charset="utf-8"></script>
+    <!--引入Axios js脚本-->
+    <script src="js/axios.js" charset="utf-8"></script>
+    <!--引入时间插件包Momentjs-->
+    <script src="js/moment.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+
+        var app = new Vue({
+            el:"#app",
+            data:{
+                userinfo: {userid:3},
+                messageList:{},
+                searchMap:{"startTime":"","endTime":"","data":"","pageNum":1,"pageSize":5,"getuserid":1}
+            },
+            methods:{
+                async test(){
+                    await axios.post("/message/search",this.searchMap).then((res)=>{
+                        app.messageList = res.data.data;
+                    });
+                    console.log(this.messageList);
+                },
+                //日期格式化方法
+                //date 要进行格式的日期 ；format 格式化的样式
+                dateFormat(date,format){
+                    //默认格式化字符串"YYYY-MM-DD HH:mm:ss"
+                    if(format == null || format == ''){
+                        format = "YYYY-MM-DD HH:mm:ss";
+                    }
+                    return moment(date).format(format);
+                },
+                getKeyfromURL (name) {
+                    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null
+                },
+                getQueryString(name){
+                    let reg = `(^|&)${name}=([^&]*)(&|$)`
+                    let r = window.location.search.substr(1).match(reg);
+                    if (r != null) return unescape(r[2]); return null;
+                },
+                search(){
+                    if (this.userinfo.userid ==null) this.userinfo.userid=1;  //测试阶段用
+                    axios.get("/user/find/"+this.userinfo.userid).then((res)=>{
+                        this.userinfo = res.data.data;
+                    });
+                    // axios.get("/study/"+this.userinfo.userid).then((res)=>{
+                    //     this.studyList = res.data.data;
+                    // });
+                    // axios.get("/career/"+this.userinfo.userid).then((res)=>{
+                    //     this.careerList = res.data.data;
+                    // });
+                }
+            },
+            created:function () {//Vue生命周期方法，加载页面时会执行该方法
+                layui.use(['laydate','element','laypage','layer'], function(){
+                    $ = layui.jquery;//jquery
+                    layer = layui.layer;//弹出层
+                    okLoading.close($);
+                    layer.ready(function(){ //为了layer.ext.js加载完毕再执行
+                        layer.photos({
+                            photos: '#x-img'
+                        });
+                    });
+                });
+                //初始页面获取列表信息
+                this.userinfo.userid = this.getQueryString("userid");
+                alert("userid = "+ this.userinfo.userid);
+                this.search();
+                this.test()
+            }
+        });
+    </script>
+
+
     </body>
 </html>
