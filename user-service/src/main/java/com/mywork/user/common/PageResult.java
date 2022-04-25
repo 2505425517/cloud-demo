@@ -1,6 +1,7 @@
 package com.mywork.user.common;
 
 import java.io.Serializable;
+
 /**
  * @Auth: zhuan
  * @Desc: 分页-标准返回结果

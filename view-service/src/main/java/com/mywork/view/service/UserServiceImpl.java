@@ -4,6 +4,7 @@ package com.mywork.view.service;
 
 //import com.mywork.user.common.Result;
 
+import com.mywork.view.common.PageResult;
 import com.mywork.view.pojo.User;
 import com.mywork.view.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Service
@@ -22,6 +24,14 @@ public class UserServiceImpl  implements UserService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Override
+    public PageResult getExpert(Map searchMap) {
+        //1.远程查询
+        String url = "http://userservice/user/getExpert/" ;
+        PageResult page =  restTemplate.postForObject(url, searchMap ,PageResult.class);
+        System.out.println(searchMap);
+        return page;
+    }
     @Override
     public Result queryById(@RequestBody Integer userId) {
         String url = "http://userservice/user/find/"+userId ;

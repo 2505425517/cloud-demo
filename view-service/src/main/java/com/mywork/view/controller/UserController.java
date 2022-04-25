@@ -2,6 +2,7 @@ package com.mywork.view.controller;
 
 
 
+import com.mywork.view.common.PageResult;
 import com.mywork.view.common.Result;
 import com.mywork.view.pojo.User;
 import com.mywork.view.service.UserService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auth: zhuan
@@ -20,6 +22,13 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @RequestMapping("/getExpert")
+    public PageResult getExpert(@RequestBody Map searchMap){
+        System.out.println(searchMap);
+        PageResult page = userService.getExpert(searchMap);
+        return page;
+    }
 
     @RequestMapping("/{userId}")
 //    @PostMapping("/findById/{userId}")

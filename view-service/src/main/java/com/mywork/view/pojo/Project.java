@@ -1,4 +1,4 @@
-package com.mywork.project.pojo;
+package com.mywork.view.pojo;
 
 import javax.persistence.Id;
 import javax.persistence.Table;

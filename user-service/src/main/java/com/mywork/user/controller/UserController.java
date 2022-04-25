@@ -26,6 +26,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping("/getExpert")
+    public PageResult search(@RequestBody Map searchMap){
+        Page<User> page = userService.getExpert(searchMap);
+        return new PageResult(true, StatusCode.OK, MessageConstant.COMMUNITY_SEARCH_SUCCESS,page.getResult(),page.getTotal());
+    }
+
     @RequestMapping("/{userId}")
 //    @PostMapping("/findById/{userId}")
     public Result findById( @PathVariable("userId") Integer userId){

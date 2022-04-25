@@ -153,13 +153,49 @@
 
         <el-form-item>
             <el-button type="primary" @click="submitForm('careerList')">提交</el-button>
-            <el-button @click="addDomain">新增域名</el-button>
+            <el-button @click="addDomain">新增从业情况</el-button>
             <el-button @click="resetForm('careerList')">重置</el-button>
         </el-form-item>
 
     </el-form>
 ????
+    <el-form :model="studyList" ref="studyList" label-width="100px" class="demo-dynamic">
+        <el-form-item
+                v-for="(study, index) in studyList.studys"
+                :label="'研究领域' + index"
+                :key="study.key"
+                :prop="'studys.' + index + '.value'"
+        >
+            <!--            <el-row>-->
 
+            <el-form-item label="研究领域名称"
+                          :rules="[{ required: true, message: '请输入研究领域名称', trigger: 'blur' }]"
+            >
+                <el-input v-model="study.fieldname"></el-input>
+            </el-form-item>
+            <el-form-item label="研究领域描述"
+                          :rules="[{ required: true, message: '请输入研究领域描述', trigger: 'blur' }]"
+            >
+                <el-input v-model="study.fieldinfo"></el-input>
+            </el-form-item>
+            <el-form-item label="所属科技分类"
+                          :rules="[{ required: true, message: '请输入所属科技分类', trigger: 'blur' }]"
+                          :label-position="left"
+            >
+                <el-input v-model="study.concept"></el-input>
+            </el-form-item>
+
+            <el-button @click.prevent="removeStudy(study)">删除</el-button>
+            <!--            </el-row>-->
+        </el-form-item>
+
+        <el-form-item>
+            <el-button type="primary" @click="submitStudy('studyList')">提交</el-button>
+            <el-button @click="addStudy">新增研究领域</el-button>
+            <el-button @click="resetForm('studyList')">重置</el-button>
+        </el-form-item>
+
+    </el-form>
 </div>
 </div>
 <!--js脚本一般是放在页面尾部-->
@@ -176,7 +212,6 @@
         el:"#app",
         data:{
             title:"专家入库申报",
-            careerList:{thumbnail:"",careerListFromid:3},
             fileList:[],
             careerList: {
                 careers: [{
@@ -188,6 +223,16 @@
                     jobName:"",
                     jobInfo:"",
                     identify:"",
+                    value:""
+                }],
+                userid: ""
+            },
+            studyList: {
+                studys: [{
+                    fieldid:"",
+                    fieldame:"",
+                    fieldinfo:"",
+                    concept:"",
                     value:""
                 }],
                 userid: ""
@@ -251,13 +296,55 @@
                         key: Date.now()
                     });
                     // for (career in this.careerList.careers){}
-                    this.careerList.careers.forEach((career,index)=>{
-                            career.jobStarttime = this.dateFormat(career.selectDate[0]);
-                            career.jobEndtime = this.dateFormat(career.selectDate[1]);
-                    });
+                    // this.careerList.careers.forEach((career,index)=>{
+                    //         career.jobStarttime = this.dateFormat(career.selectDate[0]);
+                    //         career.jobEndtime = this.dateFormat(career.selectDate[1]);
+                    // });
                     // this.careerList.careers.jobStarttime = this.dateFormat(this.careerList.careers.selectDate[0]);
                     // this.careerList.careers.jobEndtime = this.dateFormat(this.careerList.careers.selectDate[1]);
              },
+            submitStudy(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        // if(this.message.messageid != null){
+                        //     method = "update"
+                        // }else{
+                        //     method = "add"
+                        // }
+                        let method = "add";
+                        this.studyList.studys.forEach((study,index)=>{
+                            study.userid = this.studyList.userid;
+                            axios.post("/study/"+method, study).then((res)=>{
+                                if(res.data.flag){
+                                    this.$message({
+                                        message: res.data.message,
+                                        type: 'success'
+                                    });
+                                }
+                            });
+                        });
+                        alert('submit!');
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetStudy(formName) {
+                this.$refs[formName].resetFields();
+            },
+            removeStudy(item) {
+                var index = this.studyList.studys.indexOf(item)
+                if (index !== -1) {
+                    this.studyList.studys.splice(index, 1)
+                }
+            },
+            addStudy() {
+                this.studyList.studys.push({
+                    value: '',
+                    key: Date.now()
+                });
+            },
             //日期格式化方法
             //date 要进行格式的日期 ；format 格式化的样式
             dateFormat(date,format){

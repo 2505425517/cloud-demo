@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+         专家抽取列表
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css" media="all">
+    <script type="text/javascript" src="lib/loading/okLoading.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <!--导入ElementUI样式列表，css样式一般都在页面头部-->
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+              <a><cite>首页</cite></a>
+              <a><cite>专家管理</cite></a>
+              <a><cite>专家抽取</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body" id="app">
+    <div>
+        <span class="demonstration">根据专家姓名搜索</span>
+        <el-input v-model="searchMap.data" style="width: 20%" placeholder="请输入专家名称"></el-input>
+        <el-button type="primary" plain @click="searchMap.pageNum=1;getExpertList()">搜索</el-button>
+        <span class="demonstration">根据所在城市搜索</span>
+        <el-input v-model="searchMap.precentcity" style="width: 20%" placeholder="请输入所在城市名称"></el-input>
+        <el-button type="primary" plain @click="searchMap.pageNum=1;getExpertList()">搜索</el-button>
+        <el-button type="warning" plain @click="expertFilter();expertFilter();expertFilter()">智能筛选</el-button>
+    </div>
+    <br>
+<!--    <xblock>-->
+<!--        <button class="layui-btn layui-btn-danger" @click="delAll()"><i class="layui-icon">&#xe640;</i>批量删除</button>-->
+<!--        <button class="layui-btn" @click="admin_add('添加','mailadd2.html','1000','600')"><i class="layui-icon">&#xe608;</i>添加</button>-->
+<!--        &lt;!&ndash; <span class="x-right" style="line-height:40px">共有数据：<span class="layui-badge">2</span> 条</span> &ndash;&gt;-->
+<!--    </xblock>-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>
+                <input type="checkbox" id="allChecked" :checked="checkedIDs.length===expertList.length" @click="allChecked">
+            </th>
+            <th>
+                用户ID
+            </th>
+            <th>
+                专家姓名
+            </th>
+            <th>
+                专家性别
+            </th>
+<!--            <th>-->
+<!--                专家邮件地址-->
+<!--            </th>-->
+            <th>
+                专家联系方式
+            </th>
+            <th>
+                专家现居城市
+            </th>
+            <th>
+                专家选取状态
+            </th>
+            <th>
+                操作
+            </th>
+        </tr>
+        </thead>
+        <tbody id="x-img">
+        <tr v-for="(expert,index) in expertList">
+            <td>
+                <input type="checkbox" :id="'id'+expert.userid" :value="expert.userid" v-model="checkedIDs">
+            </td>
+            <td>{{expert.userid}}</td>
+            <td>{{expert.name}}</td>
+            <td>{{expert.gender}}</td>
+<!--            <td>{{expert.mailAddress}}</td>-->
+            <td>{{expert.phoneNum}}</td>
+            <td>{{expert.precentcity}}</td>
+            <td class="td-status">
+                <span :class="expert.status == 0?'layui-btn layui-btn-normal':'layui-btn layui-btn layui-btn-danger'">
+                    {{expert.status == 0?"未选取":"已选取"}}
+                </span>
+            </td>
+            <td class="td-manage">
+                <a style="text-decoration:none" @click="expert.status == 0?admin_stop(expert.userid):admin_start(expert.userid)" href="javascript:;" :title="expert.status == 0?'取消':'选用'">
+                    <i class="layui-icon" v-if="expert.status == 0">&#xe601;</i>
+                    <i class="layui-icon" v-if="expert.status == 1">&#xe62f;</i>
+                </a>
+                <a title="编辑" href="javascript:;" @click="expert_edit('编辑','mailadd2.html',expert.userid,'1000','600')"
+                   class="ml-5" style="text-decoration:none">
+                    <i class="layui-icon">&#xe642;</i>
+                </a>
+                <a title="删除" href="javascript:;" @click="del_one(expert.userid)"
+                   style="text-decoration:none">
+                    <i class="layui-icon">&#xe640;</i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="text-align: right;margin: 10px;margin-right: 1%">共有{{total}}个搜索结果</div>
+    <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-size="searchMap.pageSize"
+            layout="prev, pager, next,sizes"
+            :page-sizes="[5,10,20]"
+            style="text-align: right;"
+            :total="total">
+    </el-pagination>
+</div>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<!--js脚本一般是放在页面尾部-->
+<!--Vue js脚本-->
+<script src="/js/vue.js" charset="utf-8"></script>
+<!--引入ElementUI组件库-->
+<script src="/js/index.js" charset="utf-8"></script>
+<!--引入Axios js脚本-->
+<script src="/js/axios.js" charset="utf-8"></script>
+<!--引入时间插件包Momentjs-->
+<script src="/js/moment.min.js" charset="utf-8"></script>
+<script>
+    var app = new Vue({
+        el:"#app",//声明当前Vue在页面的作用域
+        data:{
+            // fromusername:"",
+            // getuserid,
+            project:{projectid:3},
+            checkedIDs:[],
+            expertList:{},
+            total:10,
+            searchMap:{"startTime":"","endTime":"","data":"","pageNum":1,"pageSize":20,workUnit:"",concept:"",precentcity:""}
+        },
+        methods:{
+            getProject(){
+                // this.project.projectid = this.getQueryString("projectid");
+                axios.get("/project/findById/"+this.project.projectid).then((res)=>{
+                    app.project = res.data.data;
+                });
+            },
+            getExpertList(){
+                axios.post("/user/getExpert",this.searchMap).then((res)=>{
+                    app.expertList = res.data.data;
+                    app.total = res.data.total;
+                });
+            },
+            deleteExpert(id){
+                this.expertList.splice(id,1);
+                console.log("在前端删除了第"+id+"个专家！");
+            },
+            expertFilter(){
+                this.expertList.forEach( (expert,index) =>{
+                    // expert.careers.forEach((career) =>{
+                    //     if(career.workUnit== this.project.workUnit){
+                    //         this.deleteExpert(expert.userid);
+                    //     };
+                    // });
+                    console.log("index"+index+" expert="+expert.name);
+                    var flag = false;
+                    expert.studys.forEach((study) =>{
+                        console.log( "concept "+study.concept);
+                        if(study.concept == this.project.concept){
+                            flag=true;
+                        }else {};
+                    })
+                    if (flag==false){
+                        this.expertList.splice(index,1);
+                        console.log("删除了index"+index+"name:"+expert.name);
+                        // this.deleteExpert(index);
+                    } else{ };
+                });
+
+            },
+            //分页条件查询小区列表
+            async search(){
+                // await axios.post("/message/search",this.searchMap).then((res)=>{
+                //     app.messageList = res.data.data;
+                //     app.total = res.data.total;
+                // });
+                // this.readname();
+                // console.log(this.messageList);
+            },
+            urlImg(url){
+                return "http://localhost/estate"+url;
+            },
+            //全选、全不选方法
+            allChecked: function () {
+                if (this.checkedIDs.length === this.expertList.length) {
+                    // 全不选
+                    this.checkedIDs = [];
+
+                } else {
+                    this.checkedIDs = [];
+                    // 全选
+                    this.expertList.forEach( (item) =>{
+                        this.checkedIDs.push(item.userid); // 与checkbox的value统一
+                    })
+                }
+            },
+            //handleSizeChange每页数量发生变化后触发的方法
+            handleSizeChange(pageSize){
+                this.searchMap.pageSize = pageSize;
+                this.getExpertList();
+            },
+            //handleCurrentChange页码变化触发方法
+            handleCurrentChange(pageNum){
+                this.searchMap.pageNum = pageNum;
+                this.getExpertList();
+            },
+            //日期格式化方法
+            //date 要进行格式的日期 ；format 格式化的样式
+            dateFormat(date,format){
+                //默认格式化字符串"YYYY-MM-DD HH:mm:ss"
+                if(format == null || format == ''){
+                    format = "YYYY-MM-DD HH:mm:ss";
+                }
+                return moment(date).format(format);
+            },
+            /*添加*/
+            admin_add(title,url,w,h){
+                this.x_admin_show(title,url,w,h);
+            },
+            //编辑
+            expert_edit (title,url,id,w,h) {
+                url = url+"?id="+id;
+                this.x_admin_show(title,url,w,h);
+            },
+            /*停用*/
+            admin_stop(id){
+                layer.confirm('确认要取消选取该专家吗？',function(index){
+                    //往后台发送请求，把当前小区状态修改为”停用“
+                    // axios.get("/message/updateStatus/1/"+id).then((res)=>{
+                    //     if(res.data.flag){
+                    //         layer.msg('已停用!',{icon: 5,time:1000});
+                    //     }
+                    //     app.search();
+                    // })
+                    alert("取消选择了"+id);
+                });
+            },
+            /*启用*/
+            admin_start(id){
+                layer.confirm('确认要选取该专家吗？',function(index){
+                    //往后台发送请求，把当前小区状态修改为”启用“
+                    // axios.get("/message/updateStatus/0/"+id).then((res)=>{
+                    //     if(res.data.flag){
+                    //         layer.msg('已启用!',{icon: 6,time:1000});
+                    //     }
+                    //     app.search();
+                    // })
+                    alert("选择了"+id);
+                });
+            },
+            // 模糊匹配
+            stringMatch(str, key){
+            let index = -1, flag = false;
+            for(var i = 0, arr = key.split(""); i < arr.length; i++ ){
+                //有一个关键字都没匹配到，则没有匹配到数据
+                if(str.indexOf(arr[i]) < 0){
+                    break;
+                }else{
+                    let match = str.matchAll(arr[i]);
+                    let next = match.next();
+                    while (!next.done){
+                        if(next.value.index > index){
+                            index = next.value.index;
+                            if(i === arr.length - 1){
+                                flag = true
+                            }
+                            break;
+                        }
+                        next = match.next();
+                    }
+                }
+            }
+            return flag;
+        },
+            /*弹出层*/
+            /*
+                参数解释：
+                title	标题
+                url		请求的url
+                id		需要操作的数据id
+                w		弹出层宽度（缺省调默认值）
+                h		弹出层高度（缺省调默认值）
+            */
+        x_admin_show(title,url,width,height){
+                if (title == null || title == '') {
+                    title=false;
+                };
+                if (url == null || url == '') {
+                    url="404.html";
+                };
+                if (width == null || width == '') {
+                    width=800;
+                };
+                if (height == null || height == '') {
+                    height=($(window).height() - 50);
+                };
+                layer.open({
+                    type: 2,
+                    area: [width+'px', height +'px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    shadeClose: true,
+                    shade:0.4,
+                    title: title,
+                    content: url,
+                    cancel: function(index, layero){
+                        //使用右上角x关闭弹窗层，回调方法，重新加载页面数据，让修改或者新增的数据立马显示在页面上
+                        app.search();
+                    }
+                });
+            },
+            /*关闭弹出框口*/
+            x_admin_close(){
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            },
+            getQueryString(name){
+                let reg = `(^|&)${name}=([^&]*)(&|$)`
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        },
+        // readname(){
+        //   this.getusername();
+        // },
+        // async getusername(){
+        //    for (const message of this.messageList) {
+        //        const index = this.messageList.indexOf(message);
+        //         await axios.get("/user/"+message.messageFromid).then((res)=>{
+        //            this.$set(message,'messageFromusername', res.data.data.name);
+        //             console.log(message.messageFromusername);
+        //        }).catch(err => {  console.log(err);} );
+        //    }
+        // },
+        created:function() {//Vue生命周期方法，加载页面时会执行该方法
+            layui.use(['laydate','element','laypage','layer'], function(){
+                $ = layui.jquery;//jquery
+                layer = layui.layer;//弹出层
+                okLoading.close($);
+                layer.ready(function(){ //为了layer.ext.js加载完毕再执行
+                    layer.photos({
+                        photos: '#x-img'
+                    });
+                });
+            });
+           console.log('projectID'+this.getQueryString("projectid"));
+            this.getExpertList();
+            this.getProject()
+            // if(this.searchMap.getuserid==null) this.searchMap.getuserid=1;
+            // console.log("in searchMap : "+this.searchMap.getuserid);
+            // //初始页面获取小区列表信息
+            // this.search();
+            // this.readname();
+        }
+    });
+
+</script>
+
+</body>
+</html>

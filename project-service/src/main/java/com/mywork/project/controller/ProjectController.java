@@ -53,8 +53,8 @@ public class ProjectController {
         Boolean add = projectService.add(project);
         return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS);
     }
-    @RequestMapping("/findById")
-    public Result findById(Integer projectid){
+    @RequestMapping("/findById/{projectid}")
+    public Result findById(@PathVariable("projectid") Integer projectid){
         Project project = projectService.findById(projectid);
         return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,project);
     }

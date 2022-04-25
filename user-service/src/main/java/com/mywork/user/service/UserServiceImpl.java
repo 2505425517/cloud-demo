@@ -3,6 +3,9 @@ package com.mywork.user.service;
 
 
 //import com.mywork.user.common.Result;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.util.StringUtil;
 import com.mywork.user.mapper.UserMapper;
 import com.mywork.user.pojo.Career;
 import com.mywork.user.pojo.Study;
@@ -13,9 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Service
@@ -25,6 +30,52 @@ public class UserServiceImpl  implements UserService {
     private UserMapper userMapper;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Override
+    public Page<User> getExpert(Map searchMap) {
+        //通用Mapper多条件搜索，标准写法
+        Example example = new Example(User.class);//指定查询的表tb_Project
+        //1.初始化分页条件
+        int pageNum = 1;
+        int pageSize = 5;
+        if(searchMap != null){
+            Example.Criteria criteria = example.createCriteria();//创建查询条件
+            //名称模糊搜索
+            if(StringUtil.isNotEmpty((String) searchMap.get("data"))){
+                criteria.andLike("name", "%"+(String) searchMap.get("data")+"%");
+            }
+            //现居城市
+            if(StringUtil.isNotEmpty((String) searchMap.get("precentcity"))){
+                criteria.andLike("precentcity", "%"+(String) searchMap.get("precentcity")+"%");
+            }
+//            //避开从业单位
+//            if(StringUtil.isNotEmpty((String) searchMap.get("workUnit"))){
+//                criteria.andLike("workUnit", "%"+(String) searchMap.get("workUnit")+"%");
+//            }
+            if((Integer) searchMap.get("pageNum") !=null){
+                pageNum = (Integer) searchMap.get("pageNum");
+            }
+            if((Integer) searchMap.get("pageSize") !=null){
+                pageSize = (Integer) searchMap.get("pageSize");
+            }
+        }
+
+        PageHelper.startPage(pageNum,pageSize);//使用PageHelper插件完成分页
+        List<User> userList = userMapper.selectByExample(example);
+        for (User user : userList) {
+            String url  = "http://expertservice/career/find/" + user.getUserid();
+            String url2 = "http://expertservice/study/find/" + user.getUserid();
+            Career[] careers = restTemplate.getForObject(url, Career[].class);
+            Study[] studys = restTemplate.getForObject(url2, Study[].class);
+            user.setCareers(Arrays.asList(careers));
+            user.setStudys(Arrays.asList(studys));
+//            this.queryById(user.getUserid());
+        }
+        System.out.println(userList);
+        Page<User> users = (Page<User>)userList;
+        System.out.println(users);
+        return users;
+    }
 
     @Override
     @ResponseBody
