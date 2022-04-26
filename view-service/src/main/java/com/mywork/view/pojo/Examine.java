@@ -1,8 +1,7 @@
-package com.mywork.examine.pojo;
+package com.mywork.view.pojo;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 @Table(name="tb_examine")
 public class Examine {
@@ -13,18 +12,6 @@ public class Examine {
     private Integer examineStatus;
     private Integer examineResult;
     private String examineSuggest;
-
-    @Override
-    public String toString() {
-        return "Examine{" +
-                "examineid=" + examineid +
-                ", userid=" + userid +
-                ", projectid=" + projectid +
-                ", examineStatus=" + examineStatus +
-                ", examineResult=" + examineResult +
-                ", examineSuggest='" + examineSuggest + '\'' +
-                '}';
-    }
 
     public Integer getProjectid() {
         return projectid;

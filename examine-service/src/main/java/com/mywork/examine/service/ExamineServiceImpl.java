@@ -91,20 +91,37 @@ public class ExamineServiceImpl implements ExamineService {
             return false;
         }
     }
-//
-//    @Override
-//    public Boolean updateStatus(String status, Integer id) {
-//        Project Project = new Project();
-//        Project.setId(id);
-//        Project.setStatus(status);
-//        int row = examineMapper.updateByPrimaryKeySelective(Project);
-//        if(row>0){
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
 
+    @Override
+    public Boolean updateStatus(Integer projectid, Integer userid, Integer status) {
+//    public Boolean updateStatus(Examine examine) {
+        Examine examine = new Examine();
+        examine.setUserid(userid);
+        examine.setProjectid(projectid);
+        examine.setExamineStatus(status);
+        System.out.println(examine);
+//        int row = examineMapper.updateByPrimaryKeySelective(examine);
+        int row = examineMapper.updateStatus(projectid,userid,status);
+        if(row>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    @Override
+    public Integer getStatus(Integer projectid, Integer userid) {
+//    public Boolean updateStatus(Examine examine) {
+//        Examine examine = new Examine();
+//        examine.setUserid(userid);
+//        examine.setProjectid(projectid);
+        Examine examine = examineMapper.selectbyboth(projectid,userid);
+        if (examine == null){
+            return 0;
+        }
+        else{
+            return examine.getExamineStatus();
+        }
+    }
     @Override
     public Boolean del(List<Integer> ids) {
         for (Integer id:ids) {

@@ -106,13 +106,13 @@
                 :label="'从业情况' + index"
                 :key="career.key"
                 :prop="'careers.' + index + '.value'"
-                :label-position="left"
+
                 >
 <!--            <el-row>-->
 
                 <el-form-item label="从业时间"
                       :rules="[{ required: true, message: '请选择从业时间', trigger: 'blur' }]"
-                      :label-position="left"
+
                 >
                     <el-date-picker
                             v-model="career.selectDate"
@@ -125,25 +125,25 @@
                 </el-form-item>
                 <el-form-item label="从业单位"
                       :rules="[{ required: true, message: '请输入从业单位', trigger: 'blur' }]"
-                      :label-position="left"
+
                 >
                     <el-input v-model="career.workUnit"></el-input>
                 </el-form-item>
                 <el-form-item label="职位名称"
                       :rules="[{ required: true, message: '请输入职位名称', trigger: 'blur' }]"
-                      :label-position="left"
+
                 >
                     <el-input v-model="career.jobName"></el-input>
                 </el-form-item>
                 <el-form-item label="职务描述"
                       :rules="[{ required: true, message: '请输入职务描述', trigger: 'blur' }]"
-                      :label-position="left"
+
                 >
                     <el-input v-model="career.jobInfo"></el-input>
                 </el-form-item>
                 <el-form-item label="证明人"
                       :rules="[{ required: true, message: '请输入证明人', trigger: 'blur' }]"
-                      :label-position="left"
+
                 >
                     <el-input v-model="career.identify"></el-input>
                 </el-form-item>
@@ -158,7 +158,7 @@
         </el-form-item>
 
     </el-form>
-????
+----
     <el-form :model="studyList" ref="studyList" label-width="100px" class="demo-dynamic">
         <el-form-item
                 v-for="(study, index) in studyList.studys"
@@ -180,7 +180,7 @@
             </el-form-item>
             <el-form-item label="所属科技分类"
                           :rules="[{ required: true, message: '请输入所属科技分类', trigger: 'blur' }]"
-                          :label-position="left"
+
             >
                 <el-input v-model="study.concept"></el-input>
             </el-form-item>

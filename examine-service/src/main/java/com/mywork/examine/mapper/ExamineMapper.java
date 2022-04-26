@@ -3,6 +3,7 @@ package com.mywork.examine.mapper;
 
 import com.mywork.examine.pojo.Examine;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -16,4 +17,10 @@ public interface ExamineMapper extends Mapper<Examine>  {
 
     @Select("select * from tb_examine where userid = #{userid}")
     public List<Examine> selectbyuserid (Integer userid);
+
+    @Update("update tb_examine set examine_status = #{status} where projectid = #{projectid} and userid = #{userid}")
+    public Integer updateStatus (Integer projectid,Integer userid,Integer status);
+
+    @Select("select * from tb_examine where projectid = #{projectid} and userid = #{userid}")
+    public Examine selectbyboth (Integer projectid,Integer userid);
 }

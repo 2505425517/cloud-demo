@@ -57,5 +57,9 @@ public interface ExamineService {
 
    public Boolean update(Examine examine);
 
-   public Boolean del(List<Integer> ids);
+    Boolean updateStatus(Integer projectid, Integer userid, Integer status);
+
+    Integer getStatus(Integer projectid, Integer userid);
+
+    public Boolean del(List<Integer> ids);
 }

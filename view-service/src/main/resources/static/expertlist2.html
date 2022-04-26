@@ -86,14 +86,14 @@
             <td>{{expert.phoneNum}}</td>
             <td>{{expert.precentcity}}</td>
             <td class="td-status">
-                <span :class="expert.status == 0?'layui-btn layui-btn-normal':'layui-btn layui-btn layui-btn-danger'">
-                    {{expert.status == 0?"未选取":"已选取"}}
+                <span :class="expert.examineStatus == 0?'layui-btn layui-btn-normal':'layui-btn layui-btn layui-btn-danger'">
+                    {{expert.examineStatus == 0?"未选取":"已选取"}}
                 </span>
             </td>
             <td class="td-manage">
-                <a style="text-decoration:none" @click="expert.status == 0?admin_stop(expert.userid):admin_start(expert.userid)" href="javascript:;" :title="expert.status == 0?'取消':'选用'">
-                    <i class="layui-icon" v-if="expert.status == 0">&#xe601;</i>
-                    <i class="layui-icon" v-if="expert.status == 1">&#xe62f;</i>
+                <a style="text-decoration:none" @click="expert.examineStatus == 0?admin_start(expert.userid):admin_stop(expert.userid)" href="javascript:;" :title="expert.examineStatus == 0?'取消':'选用'">
+                    <i class="layui-icon" v-if="expert.examineStatus == 0">&#xe62f;</i>
+                    <i class="layui-icon" v-if="expert.examineStatus != 0">&#xe601;</i>
                 </a>
                 <a title="编辑" href="javascript:;" @click="expert_edit('编辑','mailadd2.html',expert.userid,'1000','600')"
                    class="ml-5" style="text-decoration:none">
@@ -107,7 +107,7 @@
         </tr>
         </tbody>
     </table>
-    <div style="text-align: right;margin: 10px;margin-right: 1%">共有{{total}}个搜索结果</div>
+    <div style="text-align: right;margin: 10px;margin-right: 1%">共有{{total}}个搜索结果，符合要求的有{{expertList.length}}个</div>
     <el-pagination
             background
             @size-change="handleSizeChange"
@@ -135,7 +135,7 @@
         data:{
             // fromusername:"",
             // getuserid,
-            project:{projectid:3},
+            project:{projectid:1},
             checkedIDs:[],
             expertList:{},
             total:10,
@@ -143,16 +143,37 @@
         },
         methods:{
             getProject(){
-                // this.project.projectid = this.getQueryString("projectid");
-                axios.get("/project/findById/"+this.project.projectid).then((res)=>{
+                this.project.projectid = this.getQueryString("projectid");
+                if(this.project.projectid==null) this.project.projectid = 1; //测试用
+                    axios.get("/project/findById/"+this.project.projectid).then((res)=>{
                     app.project = res.data.data;
                 });
             },
-            getExpertList(){
-                axios.post("/user/getExpert",this.searchMap).then((res)=>{
+            async getExamineStatus(){
+                // for (const expert of this.expertList) {
+                //     const index = this.messageList.indexOf(message);
+                //     await axios.post("/examine/getStatus",).then((res)=>{
+                //         console.log("before:"+res.data.data);
+                //         this.$set(expert, 'examineStatus',res.data.data);
+                //         console.log("after:"+expert.examineStatus);
+                //     }).catch(err => {  console.log(err);} );
+                // }
+               await this.expertList.forEach( (expert,index) =>{
+                    axios.post("/examine/getStatus",{projectid:this.project.projectid,userid:expert.userid}).then((res)=>{
+                        console.log("before:"+res.data.data);
+                        this.$set(expert, 'examineStatus',res.data.data );
+                    });
+                    console.log("after:"+expert.examineStatus);
+                });
+
+            }
+            ,
+            async getExpertList(){
+                await axios.post("/user/getExpert",this.searchMap).then((res)=>{
                     app.expertList = res.data.data;
                     app.total = res.data.total;
                 });
+                this.getExamineStatus();
             },
             deleteExpert(id){
                 this.expertList.splice(id,1);
@@ -239,26 +260,36 @@
             admin_stop(id){
                 layer.confirm('确认要取消选取该专家吗？',function(index){
                     //往后台发送请求，把当前小区状态修改为”停用“
-                    // axios.get("/message/updateStatus/1/"+id).then((res)=>{
-                    //     if(res.data.flag){
-                    //         layer.msg('已停用!',{icon: 5,time:1000});
-                    //     }
-                    //     app.search();
-                    // })
-                    alert("取消选择了"+id);
+                    var map = {
+                        userid: id,
+                        projectid: app.project.projectid,
+                        examineStatus: 0,
+                    }
+                    axios.post("/examine/updateStatus/",map).then((res)=>{
+                        if(res.data.flag){
+                            layer.msg('已停用!',{icon: 5,time:1000});
+                        }
+                        app.getExpertList();
+                    })
+                    //alert("取消选择了"+id);
                 });
             },
             /*启用*/
             admin_start(id){
                 layer.confirm('确认要选取该专家吗？',function(index){
-                    //往后台发送请求，把当前小区状态修改为”启用“
-                    // axios.get("/message/updateStatus/0/"+id).then((res)=>{
-                    //     if(res.data.flag){
-                    //         layer.msg('已启用!',{icon: 6,time:1000});
-                    //     }
-                    //     app.search();
-                    // })
-                    alert("选择了"+id);
+                    //往后台发送请求，新建一个评审行
+                    var examine = {
+                        userid: id,
+                        projectid: app.project.projectid,
+                        examineStatus: 1,
+                       }
+                    axios.post("/examine/add/",examine).then((res)=>{
+                        if(res.data.flag){
+                            layer.msg('已启用!',{icon: 6,time:1000});
+                        }
+                        app.getExpertList();
+                    })
+                    //alert("选择了"+id);
                 });
             },
             // 模糊匹配

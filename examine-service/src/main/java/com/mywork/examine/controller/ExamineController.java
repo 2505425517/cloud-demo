@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auth: zhuan
@@ -25,23 +26,6 @@ public class ExamineController {
     @Autowired
     private ExamineServiceImpl examineService;
 
-
-//    @RequestMapping("/find/{projectId}")
-//    public Project queryByUserId(@PathVariable("projectId") Integer userid) {
-//        // 根据id查询订单并返回
-//        return examineService.findById(userid);
-//    }
-
-//    public Result find(){
-//        List<StudyField> all = studyFieldService.querystudyfieldById(@PathVariable("userId") Long userId);
-//        return new Result(false,200,"请求成功adasdasdas",all);
-//    }
-//    @RequestMapping("/search")
-//    public PageResult search(@RequestBody Map searchMap){
-//        Page<Expert> page = expertService.search(searchMap);
-//        return new PageResult(true, StatusCode.OK, MessageConstant.COMMUNITY_SEARCH_SUCCESS,page.getResult(),page.getTotal());
-//    }
-//
     @RequestMapping("/findall")
     public Result findAll() {
         // 根据id查询订单并返回
@@ -52,6 +36,17 @@ public class ExamineController {
     public Result add(@RequestBody Examine examine){
         Boolean add = examineService.add(examine);
         return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS);
+    }
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(@RequestBody Map<String,Object> datas){
+        Boolean update = examineService.updateStatus((Integer)datas.get("projectid"),(Integer)datas.get("userid"),(Integer)datas.get("status"));
+        System.out.println(update);
+        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS,update);
+    }
+    @RequestMapping("/getStatus")
+    public Result getStatus(@RequestBody Map<String,Object> datas){
+        Integer status = examineService.getStatus((Integer)datas.get("projectid"),(Integer)datas.get("userid"));
+        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS,status);
     }
     @RequestMapping("/findByUserId/{userId}")
     public Result findById(@PathVariable("userId") Integer userid){
