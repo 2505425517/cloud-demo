@@ -27,7 +27,11 @@
     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
 <div class="x-body">
+    <el-button type="primary" plain style="margin-bottom: 20px;width: 100%;text-align: left;">用户填写模块</el-button>
     <el-form :model="project" :rules="rules" ref="projectFormRef" label-width="120px" class="demo-ruleForm">
+        <el-form-item label="项目申请人ID" prop="userid">
+            <el-input v-model="project.userid"></el-input>
+        </el-form-item>
         <el-form-item label="项目所属领域" prop="name">
             <el-input v-model="project.concept"></el-input>
         </el-form-item>
@@ -64,7 +68,7 @@
     </el-form>
     <el-row style="text-align: center">
         <span><b>项目状态： </b></span>
-        <el-button type="primary">{{project.projectStatus == 0?'申请阶段':'进行阶段'}}</el-button>
+        <el-button type="warning" plain>{{project.projectStatus == 0?'申请阶段':'进行阶段'}}</el-button>
     </el-row>
 
 </div>
@@ -84,7 +88,7 @@
         el:"#app",
         data:{
             title:"用户申请项目",
-            project:{thumbnail:"",projectid:1,projectStatus:0},
+            project:{thumbnail:"",projectid:"",projectStatus:0,userid:""},
             fileList:[],
             rules: {
                 // name: [
@@ -222,16 +226,39 @@
                 let reg = `(^|&)${name}=([^&]*)(&|$)`
                 let r = window.location.search.substr(1).match(reg);
                 if (r != null) return unescape(r[2]); return null;
+            },
+            async getProject(){
+                this.project.projectid = this.getQueryString("projectid");
+                if(this.project.projectid!=null) {
+                    await axios.get("/project/findById/"+this.project.projectid).then((res)=>{
+                        app.project = res.data.data;
+                    });
+                    return;
+                }
+                if(this.getQueryString("userid")!=null) {
+                    this.project.userid = this.getQueryString("userid");
+                    console.log(this.project.userid);
+                }
+            },
+            getDateTest(){
+                // var temp = {0:app.project.projectStarttime,1:app.project.projectEndtime};
+                if(this.project.projectid!=null) {
+                    var temp = [new Date(app.project.projectStarttime), new Date(app.project.projectEndtime)];
+                    this.$set(app.project, "selectDate", temp);
+                }
             }
-        },
-        created:function(){
-            layui.use(['element','layer','form'], function(){
-                $ = layui.jquery;//jquery
-                lement = layui.element();//面包导航
-                layer = layui.layer;//弹出层
-                form = layui.form();
-                okLoading.close($);
-            });
+            },
+            created:function(){
+                layui.use(['element','layer','form'], function(){
+                    $ = layui.jquery;//jquery
+                    lement = layui.element();//面包导航
+                    layer = layui.layer;//弹出层
+                    form = layui.form();
+                    okLoading.close($);
+                });
+                this.getProject();
+                //this.getDateTest();
+
             // this.project.projectid = 4;
             //获取父页面传递参数，小区ID
             // this.message.id = this.getQueryString("id");
@@ -240,7 +267,7 @@
             //     this.title="修改小区";
             //     this.findById();
             // }
-        }
+            }
     });
 </script>
 </body>

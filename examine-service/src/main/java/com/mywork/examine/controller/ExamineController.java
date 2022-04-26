@@ -38,13 +38,13 @@ public class ExamineController {
         return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS);
     }
     @RequestMapping("/updateStatus")
-    public Result updateStatus(@RequestBody Map<String,Object> datas){
+    public Result updateStatus(@RequestBody Map<String,Integer> datas){
         Boolean update = examineService.updateStatus((Integer)datas.get("projectid"),(Integer)datas.get("userid"),(Integer)datas.get("status"));
         System.out.println(update);
         return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS,update);
     }
     @RequestMapping("/getStatus")
-    public Result getStatus(@RequestBody Map<String,Object> datas){
+    public Result getStatus(@RequestBody Map<String,Integer> datas){
         Integer status = examineService.getStatus((Integer)datas.get("projectid"),(Integer)datas.get("userid"));
         return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS,status);
     }

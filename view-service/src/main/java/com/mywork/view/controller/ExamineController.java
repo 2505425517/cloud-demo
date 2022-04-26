@@ -56,12 +56,12 @@ public class ExamineController {
         return page;
     }
     @RequestMapping("/updateStatus")
-    public Result updateStatus(@RequestBody Map<String,Object> datas){
+    public Result updateStatus(@RequestBody Map<String,Integer> datas){
         Result page = examineService.updateStatus(datas);
         return page;
     }
     @RequestMapping("/getStatus")
-    public Result getStatus(@RequestBody Map<String,Object> datas){
+    public Result getStatus(@RequestBody Map<String,Integer> datas){
         Result page = examineService.getStatus(datas);
         return page;
     }

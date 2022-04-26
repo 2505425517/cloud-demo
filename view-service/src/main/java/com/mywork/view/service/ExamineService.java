@@ -20,7 +20,7 @@ public interface ExamineService {
 
    Result del(List<Integer> ids);
 
-   Result updateStatus(Map<String,Object> map);
+   Result updateStatus(Map<String,Integer> map);
 
-   Result getStatus(Map<String,Object> map);
+   Result getStatus(Map<String,Integer> map);
 }

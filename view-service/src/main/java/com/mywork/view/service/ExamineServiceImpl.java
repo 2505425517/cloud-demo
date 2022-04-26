@@ -58,7 +58,7 @@ public class ExamineServiceImpl implements ExamineService {
     }
     @Override
 //    public Result updateStatus(Integer projectid, Integer userid, Integer status) {
-    public Result updateStatus(Map<String,Object> map) {
+    public Result updateStatus(Map<String,Integer> map) {
         String url = "http://examineservice/examine/updateStatus/" ;
 //        Map<String,Object> map = new HashMap<String, Object>();
 //        map.put("projectid",projectid);
@@ -69,7 +69,7 @@ public class ExamineServiceImpl implements ExamineService {
     }
     @Override
 //    public Result getStatus(Integer projectid, Integer userid) {
-    public Result getStatus(Map<String,Object> map) {
+    public Result getStatus(Map<String,Integer> map) {
         String url = "http://examineservice/examine/getStatus/" ;
 //        Map<String,Object> map = new HashMap<String, Object>();
 //        map.put("projectid",projectid);

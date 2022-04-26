@@ -79,8 +79,68 @@
             <td>
                 <input type="checkbox" :id="'id'+expert.userid" :value="expert.userid" v-model="checkedIDs">
             </td>
-            <td>{{expert.userid}}</td>
-            <td>{{expert.name}}</td>
+            <td>{{expert.userid}}
+<!--            <td>{{expert.name}}</td>-->
+            <td>
+                <el-popover
+                        placement="right"
+                        width="600"
+                        trigger="hover">
+                        <table class="layui-table welcome" style="text-align: left !important;padding-left:15px  "><!--table-layout: fixed-->
+
+                            <thead>
+                            <tr>
+                                <th>专家姓名</th>
+                                <th>年龄/国籍</th>
+                                <th>邮箱地址 </th>
+                                <th>通讯地址</th>
+                                <th>最高学位</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span id="lbServerName">{{expert.name}}</span></td>
+                                <td>{{expert.age+"/"+expert.nationality}}</td>
+                                <td>{{expert.mailAddress}}</td>
+                                <td>{{expert.address}}</td>
+                                <td>{{expert.highestQualification}}</td>
+                            </tr>
+                            </tbody>
+
+                            <tr>
+                                <th>从业时间</th>
+                                <th>从业单位</th>
+                                <th>职位名称</th>
+                                <th>职务描述</th>
+                                <th>证明人</th>
+                            </tr>
+                            <tbody>
+                            <tr v-for="(career,index) in expert.careers">
+                                <td>{{career.jobStarttime.split(" ")[0]}} 至 {{career.jobEndtime.split(" ")[0]}} </td>
+                                <td>{{career.workUnit}}</td>
+                                <td>{{career.jobName}}</td>
+                                <td>{{career.jobInfo}}</td>
+                                <td>{{career.identify}}</td>
+                            </tr>
+                            </tbody>
+
+                            <tr>
+                                <th>研究领域名称</th>
+                                <th>研究领域描述</th>
+                                <th>所属科技分类</th>
+                            </tr>
+                            <tbody>
+                            <tr v-for="(study,index) in expert.studys">
+                                <td>{{study.fieldname}}</td>
+                                <td>{{study.fieldinfo}}</td>
+                                <td>{{study.concept}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    <el-button slot="reference">{{expert.name}}</el-button>
+                </el-popover>
+            </td>
+
             <td>{{expert.gender}}</td>
 <!--            <td>{{expert.mailAddress}}</td>-->
             <td>{{expert.phoneNum}}</td>
@@ -263,7 +323,7 @@
                     var map = {
                         userid: id,
                         projectid: app.project.projectid,
-                        examineStatus: 0,
+                        status:0,  //注意这里的status要和三层框架的相同
                     }
                     axios.post("/examine/updateStatus/",map).then((res)=>{
                         if(res.data.flag){
@@ -389,7 +449,7 @@
             });
            console.log('projectID'+this.getQueryString("projectid"));
             this.getExpertList();
-            this.getProject()
+            this.getProject();
             // if(this.searchMap.getuserid==null) this.searchMap.getuserid=1;
             // console.log("in searchMap : "+this.searchMap.getuserid);
             // //初始页面获取小区列表信息

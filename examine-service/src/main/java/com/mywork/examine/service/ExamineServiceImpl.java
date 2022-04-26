@@ -66,6 +66,7 @@ public class ExamineServiceImpl implements ExamineService {
     }
     @Override
     public Boolean add(Examine examine) {
+        examineMapper.deleteNotworking();
         int row = examineMapper.insert(examine);
         if(row>0){
             return true;
