@@ -22,6 +22,15 @@
 <body>
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header header header-demo">
+        <script>
+            function getQueryString(name){
+                let reg = `(^|&)${name}=([^&]*)(&|$)`
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+            userid =getQueryString("userid");
+            alert(userid);
+        </script>
         <div class="layui-main">
             <div class="admin-logo-box">
                 <img src="images/logo.png" class="logo" width="183px" alt="">
@@ -41,10 +50,10 @@
                         <li class="dropdown-header" style="text-align: center;">4条活动</li>
                         <li  style="border-bottom: 1px solid #e9e9e9;background: #f9f9f9"> <a href="javascript:;" onclick="xadmin.add_tab('统计页面','notice-list.html')">
                             <div class="clearfix">
-                                <span class="pull-left"> <i class="btn btn-pink iconfont">&#xe6bc;</i> 小区活动 </span>
+                                <span class="pull-left"> <i class="btn btn-pink iconfont">&#xe6bc;</i> 日常活动 </span>
                                 <span class="pull-right badge badge-info">+12</span>
                             </div> </a> </li>
-                        <li  style="border-bottom: 1px solid #e9e9e9;background: #f9f9f9"> <a href="javascript:;" > <i class="btn btn-primary iconfont">&#xe6bc;</i> 业主活动 </a> </li>
+                        <li  style="border-bottom: 1px solid #e9e9e9;background: #f9f9f9"> <a href="javascript:;" > <i class="btn btn-primary iconfont">&#xe6bc;</i> 专家评审事件 </a> </li>
 
                         <li > <a href="javascript:;" style="color: #FF7700">查看所有活动 <i class="iconfont">&#xe69b;</i> </a> </li>
                     </ul>
@@ -53,18 +62,18 @@
                     <i></i>
                     <a href="#"><i class="iconfont">&#xe713;</i><span class="layui-badge"></span></a>
                     <ul class="news" id="news" style="display: none;">
-                        <li class="dropdown-header" style="text-align: center;">5条投诉</li>
+                        <li class="dropdown-header" style="text-align: center;">5条信息</li>
                         <li style="border-bottom: 1px solid #e9e9e9;background: #f9f9f9"> <a href="#">
                             <div class="clearfix">
-                                <span class="pull-left"> <i class="btn btn-pink iconfont" style="font-size: 12px;">&#xe69b;</i> 投诉 </span>
+                                <span class="pull-left"> <i class="btn btn-pink iconfont" style="font-size: 12px;">&#xe69b;</i> 信息 </span>
                                 <span class="pull-right badge badge-info">+5</span>
                             </div> </a> </li>
 
-                        <li> <a href="javascript:;" style="color: #FF7700"> 查看所有投诉 <i class="iconfont">&#xe69b;</i> </a> </li>
+                        <li> <a href="javascript:;" style="color: #FF7700"> 查看所有信息 <i class="iconfont">&#xe69b;</i> </a> </li>
                     </ul>
                 </li>
 
-                <li class="layui-nav-item"> <a href="javascript:;">admin</a>
+                <li class="layui-nav-item"> <a href="javascript:;">菜单</a>
                     <dl class="layui-nav-child">
                         <!-- 二级菜单 -->
                         <dd><a href="javascript:;"  onclick="one_set('个人信息','one_set.html','1000','600')">个人信息</a>
@@ -102,18 +111,18 @@
                 <li class="layui-nav-item "> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 2px;font-size: 16px;">&#xe612;</i><cite>用户信息管理</cite> </a>    
                     <dl class="layui-nav-child">
                         <dd class="">
-                        <dd class=""> <a href="javascript:;" _href="user_info.html?userid=2"> <cite>个人信息查看</cite> </a> </dd>
-                        <dd class=""> <a href="javascript:;" _href="useradd2.html?userid=2"> <cite>修改个人信息</cite> </a> </dd>
-                        <dd class=""> <a href="javascript:;" _href="mailbox2.html?userid=2">   <cite>消息通知列表</cite> </a> </dd>
+                        <dd class=""> <a href="javascript:;" _href="user_info.html?userid="> <cite>个人信息查看</cite> </a> </dd>
+                        <dd class=""> <a href="javascript:;" _href="useradd2.html?userid="> <cite>修改个人信息</cite> </a> </dd>
+                        <dd class=""> <a href="javascript:;" _href="mailbox2.html?userid=">   <cite>消息通知列表</cite> </a> </dd>
                         </dd>
                     </dl>
                 </li>
                 <li id="expert" class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 2px;font-size: 16px;">&#xe613;</i><cite>专家功能模块</cite> </a>
                     <dl class="layui-nav-child">
                         <dd class="">
-                        <dd class=""> <a href="javascript:;" _href="expertadd2.html?userid=2">   <cite>*专家入库申报</cite> </a> </dd>
-                        <dd class=""> <a href="javascript:;" _href="expert_info.html?userid=2"> <cite>专家信息管理</cite> </a> </dd>
-                        <dd class=""> <a href="javascript:;" _href="expert_exam.html?userid=2"> <cite>专家培训考核</cite> </a> </dd>
+                        <dd class=""> <a href="javascript:;" _href="expertadd2.html?userid=">   <cite>*专家入库申报</cite> </a> </dd>
+                        <dd class=""> <a href="javascript:;" _href="expert_info.html?userid="> <cite>专家信息管理</cite> </a> </dd>
+                        <dd class=""> <a href="javascript:;" _href="expert_exam.html?userid="> <cite>专家培训考核</cite> </a> </dd>
                         </dd>
                     </dl>
                 </li>
@@ -177,8 +186,6 @@
         $(""+table+"").removeClass("hide_lits");
         $(""+table+"").addClass("show_list");
     })
-
-
 </script>
 <script>
     layui.use(['laydate','element','laypage','layer'], function(){
@@ -269,6 +276,7 @@
             gonggaos.style.display='none';
         });
     }
+
 </script>
 </body>
 </html>

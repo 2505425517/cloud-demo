@@ -9,6 +9,15 @@
   <script src="./lib/layui/layui.js" charset="utf-8"></script>
 </head>
 <body class="login-bg">
+<div style="    text-align: center;
+    box-sizing: border-box;
+    padding: 10px;
+    background: #767676;
+    opacity: 0.75;
+    width: 70%;
+    margin: auto;" >
+    <img src="images/logo.png" class="logo" style="width:30%" alt="">
+</div>
 
     <div class="login">
         <div class="message">系统登录</div>
@@ -20,6 +29,10 @@
             <hr class="hr15">
             <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
             <hr class="hr20" >
+            <br>
+            <div style="font-size: 14px">
+                没有账号？点击<a href="useradd2.html" style="font-size: 14px;color: brown">注册</a>
+            </div>
         </form>
     </div>
     <script>
@@ -37,7 +50,8 @@
                     layer.alert(JSON.stringify(data.field), {
                       title: '点击确定进入后台'
                     },function  () {
-                        location.href = "./index.html";
+                        var userid = data.field.username;
+                        location.href = "./index.html?userid="+userid;
                     })
                     return false;
 

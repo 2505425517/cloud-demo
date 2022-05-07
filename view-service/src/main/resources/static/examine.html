@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        专家评审项目
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="/css/main.css" media="all">
+    <script type="text/javascript" src="/lib/loading/okLoading.js"></script>
+    <!-- 引入ElementUI样式 -->
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+<div id="app">
+    <div class="x-nav">
+            <span class="layui-breadcrumb">
+              <a><cite>首页</cite></a>
+              <a><cite>项目管理</cite></a>
+              <a><cite>{{title}}</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+<!--        <row>-->
+            <el-button type="primary" plain style="margin-bottom: 20px;width: 100%;text-align: left;">项目信息</el-button>
+<!--        </row>-->
+        <table class="layui-table welcome" style="text-align: left !important; padding-left:20px;">
+            <tbody>
+            <tr>
+                <th>项目申请人ID</th>
+                <td><span id="lbServerName">{{project.userid}}</span></td>
+            </tr>
+            <tr>
+                <th>项目所属领域</th>
+                <td>{{project.concept}}</td>
+            </tr>
+           <tr>
+               <th>项目所属单位</th>
+               <td>{{project.workUnit}}</td>
+           </tr>
+            <tr>
+                <th>项目名称</th>
+                <td>{{project.projectName}}</td>
+            </tr>
+            <tr>
+                <th  >项目描述</th>
+                <td>{{project.projectInfo}}</td>
+            </tr>
+            <tr>
+                <th >项目资料</th>
+                <td><a style="color: #00a0e9">相关资料下载</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <el-form :model="project" :rules="rules" ref="projectFormRef" label-width="120px" class="demo-ruleForm">
+<!--            <el-row>-->
+<!--                <el-form-item label="项目申请人" prop="userid" >-->
+<!--                    <el-input v-model="project.userid" ></el-input>-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="项目所属领域" prop="name">-->
+<!--                    <el-input v-model="project.concept" ></el-input>-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="项目所属单位" prop="workunit">-->
+<!--                    <el-input v-model="project.workUnit" ></el-input>-->
+<!--                </el-form-item>-->
+<!--            </el-row>-->
+<!--            <el-form-item label="项目名称" prop="name">-->
+<!--                <el-input v-model="project.projectName" ></el-input>-->
+<!--            </el-form-item>-->
+
+<!--            <el-form-item label="项目简述" prop="fromid" >-->
+<!--                <el-input-->
+<!--                        type="textarea"-->
+<!--                        :rows="3"-->
+
+<!--                        v-model="project.projectInfo">-->
+<!--                </el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="项目资料" prop="thumbnail">-->
+<!--                <el-upload-->
+<!--                        class="upload-demo"-->
+<!--                        drag-->
+<!--                        action="https://jsonplaceholder.typicode.com/posts/"-->
+<!--                        multiple>-->
+<!--                    <i class="el-icon-upload"></i>-->
+<!--                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+<!--                    <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
+<!--                </el-upload>-->
+<!--            </el-form-item>-->
+
+<!--            <row>-->
+                <el-button type="success" plain style="margin-bottom: 20px;width: 100%;text-align: left;">项目评审内容</el-button>
+<!--            </row>-->
+            <el-radio-group v-model="examine.examine_result" style="margin:20px">
+                <el-radio :label="1" border>通过</el-radio>
+                <el-radio :label="2" border>修改后通过</el-radio>
+                <el-radio :label="3" border>未通过</el-radio>
+            </el-radio-group>
+            <el-form-item label="评审综合得分" prop="examine_score" >
+                <el-input v-model="examine.examine_score" style="width: 20%"></el-input>
+            </el-form-item>
+            <el-form-item label="专家评审建议" prop="examine_suggest">
+                <el-input v-model="examine.examine_suggest"
+                          :rows="6"
+                          style="width: 98%"
+                ></el-input>
+            </el-form-item>
+            <div class="layui-input-inline" style="margin-left: 20px;margin-bottom: 20px;width: 96%">
+                <textarea  id="demo" style="display: none;margin-left: 20px;margin-bottom: 20px;width: 96%" ></textarea>
+            </div>
+            <el-form-item label="项目评审日期" prop="time">
+                <div class="block">
+                    <el-date-picker
+                            v-model="project.selectDate"
+                            type="datetimerange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                    </el-date-picker>
+                </div>
+            </el-form-item>
+            
+
+            </br>
+            <el-form-item >
+                <el-button type="success" @click="save()" style="text-align: center">保存</el-button>
+                <el-button @click="clearAll()" style="text-align: center">重置</el-button>
+            </el-form-item>
+        </el-form>
+        </br>
+<!--        <el-row style="text-align: center">-->
+<!--            <span><b>项目状态： </b></span>-->
+<!--            <el-button type="warning" plain>{{project.projectStatus == 0?'申请阶段':'进行阶段'}}</el-button>-->
+<!--        </el-row>-->
+
+    </div>
+</div>
+<script src="lib/layui/layui.js" charset="utf-8"></script>
+<script src="js/x-layui.js" charset="utf-8"></script>
+<!--导入Vue依赖包-->
+<script src="/js/vue.js" charset="utf-8"></script>
+<!-- 引入Element组件库 -->
+<script src="/js/index.js"></script>
+<!--导入Axios依赖包-->
+<script src="/js/axios.js" charset="utf-8"></script>
+<!--引入时间插件包Momentjs-->
+<script src="/js/moment.min.js" charset="utf-8"></script>
+<script src="js/jquery.min.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+    var app = new Vue({
+        el:"#app",
+        data:{
+            title:"专家评审项目",
+            project:{thumbnail:"",projectid:"",projectStatus:0 ,selectDate:[" "," "],projectStarttime:"",projectEndtime:""},
+            fileList:[],
+            examine:{examine_result:"",examine_suggest:"",examine_score:""},
+            rules: {
+                // name: [
+                //     { required: true, message: '请输入小区名称', trigger: 'blur' },
+                //     { max: 50, message: '长度小于50个字符', trigger: 'blur' }
+                // ],
+                // code: [
+                //     { required: true, message: '请输入小区名称', trigger: 'blur' },
+                //     { min: 11,max: 20, message: '长度必须大于11、小于20个字符', trigger: 'blur' }
+                // ],
+                // thumbnail:[
+                //     { required: true, message: '请上传小区缩略图', trigger: 'change' }
+                // ]
+            }
+        },
+        methods:{
+            /*弹出层*/
+            /*
+                参数解释：
+                title	标题
+                url		请求的url
+                id		需要操作的数据id
+                w		弹出层宽度（缺省调默认值）
+                h		弹出层高度（缺省调默认值）
+            */
+            x_admin_show(title,url,width,height){
+                if (title == null || title == '') {
+                    title=false;
+                };
+                if (url == null || url == '') {
+                    url="404.html";
+                };
+                if (width == null || width == '') {
+                    width=800;
+                };
+                if (height == null || height == '') {
+                    height=($(window).height() - 50);
+                };
+                layer.open({
+                    type: 2,
+                    area: [width+'px', height +'px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    shadeClose: true,
+                    shade:0.4,
+                    title: title,
+                    content: url,
+                    cancel: function(index, layero){
+                        //使用右上角x关闭弹窗层，回调方法，重新加载页面数据，让修改或者新增的数据立马显示在页面上
+                        // app.search();
+                    }
+                });
+            },
+            /*关闭弹出框口*/
+            x_admin_close(){
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            },
+            /*添加*/
+            expert_show(title,url,w,h){
+                this.x_admin_show(title,url,w,h);
+            },
+            transformTime(){
+                this.project.projectStarttime = this.dateFormat(this.project.selectDate[0]);
+                this.project.projectEndtime = this.dateFormat(this.project.selectDate[1]);
+            },
+            findById(){
+                axios.get("/message/findById?id="+this.message.messageid).then((res)=>{
+                    this.message = res.data.data;
+                    this.fileList.push({url:"http://localhost/estate"+this.community.thumbnail});
+                });
+            },
+            handleSuccess(response, file, fileList){
+                this.message.thumbnail=response.data;
+            },
+            handleRemove() {
+                axios.get("/estate/delfile?fileName="+this.message.thumbnail).then((res)=>{
+                    app.message.thumbnail="";
+                    if(res.data.flag){
+                        app.fileList=[];
+                        this.$message({
+                            message: '图片删除成功',
+                            type: 'success'
+                        });
+                    }
+                });
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
+            handleExceed(files, fileList) {
+                this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            //文件删除提示
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${ file.name }？`);
+            },
+            //表达重置
+            clearAll() {
+                this.$refs.projectFormRef.resetFields();
+                if(this.fileList.length>0) {
+                    this.handleRemove();
+                }
+            },
+            //日期格式化方法
+            //date 要进行格式的日期 ；format 格式化的样式
+            dateFormat(date,format){
+                //默认格式化字符串"YYYY-MM-DD HH:mm:ss"
+                if(format == null || format == ''){
+                    format = "YYYY-MM-DD HH:mm:ss";
+                }
+                return moment(date).format(format);
+            },
+            formatDate(date, fmt) {
+                if (typeof date === 'string') {
+                    date = new Date(date.replace(/-/g, '/'))
+                }
+                if (/(y+)/.test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+                }
+                const o = {
+                    'M+': date.getMonth() + 1,
+                    'd+': date.getDate(),
+                    'h+': date.getHours(),
+                    'm+': date.getMinutes(),
+                    's+': date.getSeconds()
+                }
+                for (const k in o) {
+                    if (new RegExp(`(${k})`).test(fmt)) {
+                        const str = o[k] + ''
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str))
+                    }
+                }
+                return fmt
+            },
+            getLatestDate() {
+                var aData = new Date();
+                return this.formatDate(aData, 'yyyy-MM-dd hh:mm:ss'); //时间格式化
+            },
+            fillZero(str){
+                var realNum;
+                if(str<10){
+                    realNum	= '0'+str;
+                }else{
+                    realNum	= str;
+                }
+                return realNum;
+            },
+            getTime(){
+                var myDate = new Date();
+                var myYear = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+                var myMonth = myDate.getMonth()+1; //获取当前月份(0-11,0代表1月)
+                var myToday = myDate.getDate(); //获取当前日(1-31)
+                var myDay = myDate.getDay(); //获取当前星期X(0-6,0代表星期天)
+                var myHour = myDate.getHours(); //获取当前小时数(0-23)
+                var myMinute = myDate.getMinutes(); //获取当前分钟数(0-59)
+                var mySecond = myDate.getSeconds(); //获取当前秒数(0-59)
+                var week = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+                var nowTime;
+                nowTime = myYear+'-'+this.fillZero(myMonth)+'-'+this.fillZero(myToday)+'T'+this.fillZero(myHour)+':'+this.fillZero(myMinute)+':'+this.fillZero(mySecond);
+                console.log(nowTime);
+                return nowTime;
+            },
+            save(){
+                this.transformTime();
+                var method = "";
+                // this.$set(this.message,messageTime,this.messagegetLatestDate());
+                if(this.project.projectid != null){
+                    method = "update"
+                }else{
+                    method = "add"
+                }
+                axios.post("/project/"+method,this.project).then((res)=>{
+                    if(res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                    }
+                });
+            },
+            imgUrl(){
+                return "http://localhost/estate"+app.project.thumbnail;
+            },
+            getQueryString(name){
+                let reg = `(^|&)${name}=([^&]*)(&|$)`
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            },
+            async getProject(){
+                this.project.projectid = this.getQueryString("projectid");
+                if(this.project.projectid!=null) {
+                    await axios.get("/project/findById/"+this.project.projectid).then((res)=>{
+                        app.project = res.data.data;
+                    });
+                    this.getDateTest();
+                    return;
+                }
+                if(this.getQueryString("userid")!=null) {
+                    this.project.userid = this.getQueryString("userid");
+                    console.log(this.project.userid);
+                }
+            },
+            getDateTest(){
+                // var temp = {0:app.project.projectStarttime,1:app.project.projectEndtime};
+                if(this.project.projectStarttime!=null) {
+                    var temp = [new Date(this.project.projectStarttime),new Date(this.project.projectEndtime)];
+                    this.$set(this.project,"selectDate", temp);
+                }
+                else{
+                    var temp = [new Date(),new Date()];
+                    this.$set(this.project,"selectDate", temp);
+                }
+            }
+        },
+        created:function(){
+            layui.use(['element','layer','form'], function(){
+                $ = layui.jquery;//jquery
+                lement = layui.element();//面包导航
+                layer = layui.layer;//弹出层
+                form = layui.form();
+                okLoading.close($);
+            });
+            layui.use('layedit', function(){
+                var layedit = layui.layedit;
+                layedit.build('demo'); //建立编辑器
+            });
+            this.getProject();
+            // UE.getEditor('content',{initialFrameWidth:750,initialFrameHeight:400,});
+            // this.getDateTest();
+            // this.project.projectid = 4;
+            //获取父页面传递参数，小区ID
+            // this.message.id = this.getQueryString("id");
+            //根据小区ID获取小区对象，进行数据回显
+            // if(this.community.id != null && this.community.id != ''){
+            //     this.title="修改小区";
+            //     this.findById();
+            // }
+        }
+    });
+</script>
+</body>
+</html>
