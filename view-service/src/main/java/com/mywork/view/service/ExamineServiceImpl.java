@@ -39,6 +39,12 @@ public class ExamineServiceImpl implements ExamineService {
         return page;
     }
     @Override
+    public Result selectbyboth(Integer projectid, Integer userid){
+        String url = "http://examineservice/examine/projectid/" + projectid +"/userid/"+userid;
+        Result page =  restTemplate.getForObject(url, Result.class);
+        return page;
+    };
+    @Override
     public Result add(Examine examine) {
         String url = "http://examineservice/examine/add/" ;
         Result page =  restTemplate.postForObject(url, examine ,Result.class);
@@ -48,6 +54,7 @@ public class ExamineServiceImpl implements ExamineService {
     public Result update(Examine examine) {
         String url = "http://examineservice/examine/update/" ;
         Result page =  restTemplate.postForObject(url, examine ,Result.class);
+
         return page;
     }
     @Override

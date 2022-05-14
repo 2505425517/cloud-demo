@@ -47,11 +47,11 @@
                 function(data) {
                     //alert(1);
                     /*console.log(data);*/
-                    layer.alert(JSON.stringify(data.field), {
-                      title: '点击确定进入后台'
-                    },function  () {
+                     layer.alert("恭喜你登陆成功，点击确定进入后台", {
+                       title: '登陆成功'
+                    },function() {
                         var userid = data.field.username;
-                        location.href = "./index.html?userid="+userid;
+                        location.href = "./client.html?userid="+userid;
                     })
                     return false;
 

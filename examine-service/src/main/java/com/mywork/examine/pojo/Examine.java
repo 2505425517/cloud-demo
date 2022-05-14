@@ -12,6 +12,7 @@ public class Examine {
     private Integer projectid;
     private Integer examineStatus;
     private Integer examineResult;
+    private Integer examineScore;
     private String examineSuggest;
 
     @Override
@@ -22,16 +23,9 @@ public class Examine {
                 ", projectid=" + projectid +
                 ", examineStatus=" + examineStatus +
                 ", examineResult=" + examineResult +
+                ", examineScore=" + examineScore +
                 ", examineSuggest='" + examineSuggest + '\'' +
                 '}';
-    }
-
-    public Integer getProjectid() {
-        return projectid;
-    }
-
-    public void setProjectid(Integer projectid) {
-        this.projectid = projectid;
     }
 
     public Integer getExamineid() {
@@ -50,6 +44,14 @@ public class Examine {
         this.userid = userid;
     }
 
+    public Integer getProjectid() {
+        return projectid;
+    }
+
+    public void setProjectid(Integer projectid) {
+        this.projectid = projectid;
+    }
+
     public Integer getExamineStatus() {
         return examineStatus;
     }
@@ -64,6 +66,14 @@ public class Examine {
 
     public void setExamineResult(Integer examineResult) {
         this.examineResult = examineResult;
+    }
+
+    public Integer getExamineScore() {
+        return examineScore;
+    }
+
+    public void setExamineScore(Integer examineScore) {
+        this.examineScore = examineScore;
     }
 
     public String getExamineSuggest() {

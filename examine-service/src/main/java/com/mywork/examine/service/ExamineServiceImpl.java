@@ -6,7 +6,9 @@ import com.mywork.examine.pojo.Examine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -75,6 +77,20 @@ public class ExamineServiceImpl implements ExamineService {
         }
     }
     @Override
+    public List<Integer> getprojectidByuserid(Integer userid) {
+        List<Examine> test = examineMapper.selectbyuserid(userid);
+        List<Integer> ids = new ArrayList<Integer>();
+        for (Examine item : test) {
+            ids.add(item.getProjectid());
+        }
+        System.out.println(ids);
+        return ids;
+    }
+    @Override
+    public Examine selectbyboth(Integer projectid, Integer userid){
+        return examineMapper.selectbyboth(projectid,userid);
+    };
+    @Override
     public List<Examine> findByUserId(Integer userid) {
         return examineMapper.selectbyuserid(userid);
     }
@@ -85,7 +101,14 @@ public class ExamineServiceImpl implements ExamineService {
 
     @Override
     public Boolean update(Examine examine) {
-        int row = examineMapper.updateByPrimaryKeySelective(examine);
+        System.out.println(examine.toString());
+//        int row = examineMapper.updateByPrimaryKeySelective(examine); //不生效!!!
+        Example example = new Example(Examine.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userid",examine.getUserid());
+        criteria.andEqualTo("projectid",examine.getProjectid());
+        //Examine examine1 = new Examine();
+        int row = examineMapper.updateByExampleSelective(examine,example);
         if(row>0){
             return true;
         }else{

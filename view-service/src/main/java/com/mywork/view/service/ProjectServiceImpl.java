@@ -2,6 +2,7 @@ package com.mywork.view.service;
 
 
 
+import com.mywork.view.common.PageResult;
 import com.mywork.view.common.Result;
 import com.mywork.view.pojo.Project;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Service
@@ -18,6 +20,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Override
+    public Result findForExamine(Integer userid) {
+        //1.远程查询
+        String url = "http://projectservice/project/findforExamine/"+userid;
+        Result page =  restTemplate.getForObject(url , Result.class);
+        System.out.println(page);
+        return page;
+    }
     @Override
     public Result findAll() {
         //1.远程查询
@@ -67,5 +77,18 @@ public class ProjectServiceImpl implements ProjectService {
         Result page =  restTemplate.postForObject(url, ids ,Result.class);
         return page;
     }
-
+    @Override
+    public Result findByUserID(Integer userid) {
+        String url = "http://projectservice/project/findByUserId/" +userid;
+        Result page =  restTemplate.getForObject(url,Result.class);
+        return page;
+    }
+    @Override
+    public PageResult search(Map searchMap) {
+        //1.远程查询
+        String url = "http://projectservice/project/search/" ;
+        PageResult page =  restTemplate.postForObject(url, searchMap ,PageResult.class);
+        System.out.println(searchMap);
+        return page;
+    }
 }

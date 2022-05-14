@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        待评审项目列表
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css" media="all">
+    <script type="text/javascript" src="lib/loading/okLoading.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <!--导入ElementUI样式列表，css样式一般都在页面头部-->
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+              <a><cite>首页</cite></a>
+              <a><cite>评审管理</cite></a>
+              <a><cite>待评审项目列表</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body" id="app">
+    <div>
+        <span class="demonstration">根据项目名称搜索</span>
+        <el-input v-model="searchMap.data" style="width: 20%" placeholder="请输入项目名称"></el-input>
+        <el-button type="primary" plain @click="searchMap.pageNum=1;searchMap.status=-1;getProjectList()">搜索</el-button>
+        <el-button type="warning" plain @click="projectFilter();projectFilter();projectFilter()">项目评审进行阶段</el-button>
+<!--        <span class="demonstration">根据所在城市搜索</span>-->
+<!--        <el-input v-model="searchMap.precentcity" style="width: 20%" placeholder="请输入所在城市名称"></el-input>-->
+<!--        <el-button type="primary" plain @click="searchMap.pageNum=1;getExpertList()">搜索</el-button>-->
+<!--        <el-button type="warning" plain @click="expertFilter();expertFilter();expertFilter()">智能筛选</el-button>-->
+    </div>
+    <br>
+<!--    <xblock>-->
+<!--        <button class="layui-btn layui-btn-danger" @click="delAll()"><i class="layui-icon">&#xe640;</i>批量删除</button>-->
+<!--        <button class="layui-btn" @click="admin_add('添加','mailadd2.html','1000','600')"><i class="layui-icon">&#xe608;</i>添加</button>-->
+<!--        &lt;!&ndash; <span class="x-right" style="line-height:40px">共有数据：<span class="layui-badge">2</span> 条</span> &ndash;&gt;-->
+<!--    </xblock>-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>
+                <input type="checkbox" id="allChecked" :checked="checkedIDs.length===projectList.length" @click="allChecked">
+            </th>
+            <th>
+                项目ID
+            </th>
+            <th>
+                项目名称
+            </th>
+            <th>
+                项目申请人ID
+            </th>
+
+            <th>
+                评审开始时间
+            </th>
+            <th>
+                评审结束时间
+            </th>
+            <th>
+                项目评审模式
+            </th>
+            <th>
+                项目评审地点
+            </th>
+            <th>
+                项目评审状态
+            </th>
+            <th>
+                操作
+            </th>
+        </tr>
+        </thead>
+        <tbody id="x-img">
+        <tr v-for="(project,index) in projectList">
+            <td>
+                <input type="checkbox" :id="'id'+project.projectid" :value="project.projectid" v-model="checkedIDs">
+            </td>
+            <td>{{project.projectid}}</td>
+
+<!--            <td>{{expert.name}}</td>-->
+<!--            <td>-->
+<!--                <el-popover-->
+<!--                        placement="right"-->
+<!--                        width="600"-->
+<!--                        trigger="hover">-->
+<!--                        <table class="layui-table welcome" style="text-align: left !important;padding-left:15px  ">&lt;!&ndash;table-layout: fixed&ndash;&gt;-->
+
+<!--                            <thead>-->
+<!--                            <tr>-->
+<!--                                <th>项目名称</th>-->
+<!--                                <th>项目简介</th>-->
+<!--                                <th>项目资料</th>-->
+<!--                                <th>项目</th>-->
+<!--                                <th>最高学位</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr>-->
+<!--                                <td><span id="lbServerName">{{expert.name}}</span></td>-->
+<!--                                <td>{{expert.age+"/"+expert.nationality}}</td>-->
+<!--                                <td>{{expert.mailAddress}}</td>-->
+<!--                                <td>{{expert.address}}</td>-->
+<!--                                <td>{{expert.highestQualification}}</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+
+<!--                            <tr>-->
+<!--                                <th>从业时间</th>-->
+<!--                                <th>从业单位</th>-->
+<!--                                <th>职位名称</th>-->
+<!--                                <th>职务描述</th>-->
+<!--                                <th>证明人</th>-->
+<!--                            </tr>-->
+<!--                            <tbody>-->
+<!--                            <tr v-for="(career,index) in expert.careers">-->
+<!--                                <td>{{career.jobStarttime.split(" ")[0]}} 至 {{career.jobEndtime.split(" ")[0]}} </td>-->
+<!--                                <td>{{career.workUnit}}</td>-->
+<!--                                <td>{{career.jobName}}</td>-->
+<!--                                <td>{{career.jobInfo}}</td>-->
+<!--                                <td>{{career.identify}}</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+
+<!--                            <tr>-->
+<!--                                <th>研究领域名称</th>-->
+<!--                                <th>研究领域描述</th>-->
+<!--                                <th>所属科技分类</th>-->
+<!--                            </tr>-->
+<!--                            <tbody>-->
+<!--                            <tr v-for="(study,index) in expert.studys">-->
+<!--                                <td>{{study.fieldname}}</td>-->
+<!--                                <td>{{study.fieldinfo}}</td>-->
+<!--                                <td>{{study.concept}}</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    <el-button slot="reference">{{expert.name}}</el-button>-->
+<!--                </el-popover>-->
+<!--            </td>-->
+            <td>{{project.projectName}}</td>
+            <td>{{project.userid}}</td>
+            <td>{{dateFormat(project.projectStarttime)}}</td>
+<!--            <td>{{expert.mailAddress}}</td>-->
+            <td>{{dateFormat(project.projectEndtime)}}</td>
+            <td>{{project.projectScheme}}</td>
+            <td>{{project.projectAddress}}</td>
+            <td>
+                <el-button v-if="project.projectStatus == 0" type="info" plain>申请阶段</el-button>
+                <el-button v-else-if="project.projectStatus == 1" type="primary" plain>待评审阶段</el-button>
+                <el-button v-else-if="project.projectStatus == 2" type="success" plain>评审阶段</el-button>
+                <el-button v-else-if="project.projectStatus == 3" type="warning" plain>完成阶段</el-button>
+            </td>
+<!--            <td class="td-status">-->
+<!--                <span :class="expert.examineStatus == 0?'layui-btn layui-btn-normal':'layui-btn layui-btn layui-btn-danger'">-->
+<!--                    {{expert.examineStatus == 0?"未选取":"已选取"}}-->
+<!--                </span>-->
+<!--            </td>-->
+            <td class="td-manage">
+<!--                <a style="text-decoration:none" @click="expert.examineStatus == 0?admin_start(expert.userid):admin_stop(expert.userid)" href="javascript:;" :title="expert.examineStatus == 0?'取消':'选用'">-->
+<!--                    <i class="layui-icon" v-if="expert.examineStatus == 0">&#xe62f;</i>-->
+<!--                    <i class="layui-icon" v-if="expert.examineStatus != 0">&#xe601;</i>-->
+<!--                </a>-->
+<!--                @click="expert_edit('编辑','mailadd2.html',expert.userid,'1000','600')"-->
+<!--                <a title="编辑" href="javascript:;" @click="project_edit('编辑','projectadd2-user.html',project.projectid,'1000','600')"-->
+<!--                   class="ml-5" style="text-decoration:none">-->
+<!--                    <i class="layui-icon">&#xe642;</i>-->
+<!--                </a>-->
+<!--                <a title="删除" href="javascript:;" @click="del_one(project.projectid)"-->
+<!--                   style="text-decoration:none">-->
+<!--                    <i class="layui-icon">&#xe640;</i>-->
+<!--                </a>-->
+                <el-button  v-if="project.projectStatus==2"  type="success" plain @click="examine_edit('编辑','examine.html',project.projectid,'1000','600')">
+                    专家评审 </el-button>
+                <el-button v-else disabled type="success" plain @click="examine_edit('编辑','examine.html',project.projectid,'1000','600')">
+                    专家评审 </el-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="text-align: right;margin: 10px;margin-right: 1%">共有{{total}}个搜索结果</div>
+    <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-size="searchMap.pageSize"
+            layout="prev, pager, next,sizes"
+            :page-sizes="[5,10,20]"
+            style="text-align: right;"
+            :total="total">
+    </el-pagination>
+</div>
+<script src="/lib/layui/layui.js" charset="utf-8"></script>
+<!--js脚本一般是放在页面尾部-->
+<!--Vue js脚本-->
+<script src="/js/vue.js" charset="utf-8"></script>
+<!--引入ElementUI组件库-->
+<script src="/js/index.js" charset="utf-8"></script>
+<!--引入Axios js脚本-->
+<script src="/js/axios.js" charset="utf-8"></script>
+<!--引入时间插件包Momentjs-->
+<script src="/js/moment.min.js" charset="utf-8"></script>
+<script>
+    var app = new Vue({
+        el:"#app",//声明当前Vue在页面的作用域
+        data:{
+            // fromusername:"",
+            // getuserid,
+            userid:"",
+            projectList:{},
+            checkedIDs:[],
+            total:10,
+            searchMap:{"startTime":"","endTime":"","data":"","pageNum":1,"pageSize":20,userid:"",status:-1}
+        },
+        methods:{
+
+            async getProjectList(){
+                //this.searchMap.userid = this.userid;
+                // http://localhost:8086/project/findforExamine/1
+                await axios.get("/project/findforExamine/"+this.userid).then((res)=>{
+                    app.projectList = res.data.data.data;
+                    app.total = app.projectList.length;
+                });
+            },
+            del_one(id){
+                this.$confirm('请问您是否要删除该项目评审申请?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //把选中的ID封装到集合中
+                    this.checkedIDs.push(id);
+                    //执行删除操作
+                    axios.post("/project/del",this.checkedIDs).then((res)=>{
+                        if(res.data.flag){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        }
+                        //删除成功，把选中的ID列表置为空
+                        this.checkedIDs = [];
+                        //把页面置为1，重新获取列表数据
+                        this.searchMap.pageNum = 1;
+                        this.getProjectList();
+                    });
+
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            // 专家评审
+           examine_edit (title,url,id,w,h) {
+                url = url+"?projectid="+id+"&userid="+this.userid;
+                this.x_admin_show(title,url,w,h);
+            },
+            //全选、全不选方法
+            allChecked: function () {
+                if (this.checkedIDs.length === this.expertList.length) {
+                    // 全不选
+                    this.checkedIDs = [];
+
+                } else {
+                    this.checkedIDs = [];
+                    // 全选
+                    this.expertList.forEach( (item) =>{
+                        this.checkedIDs.push(item.userid); // 与checkbox的value统一
+                    })
+                }
+            },
+            //handleSizeChange每页数量发生变化后触发的方法
+            handleSizeChange(pageSize){
+                this.searchMap.pageSize = pageSize;
+                this.getProjectList();
+            },
+            //handleCurrentChange页码变化触发方法
+            handleCurrentChange(pageNum){
+                this.searchMap.pageNum = pageNum;
+                this.getProjectList();
+            },
+            //日期格式化方法
+            //date 要进行格式的日期 ；format 格式化的样式
+            dateFormat(date,format){
+                //默认格式化字符串"YYYY-MM-DD HH:mm:ss"
+                if(format == null || format == ''){
+                    format = "YYYY-MM-DD HH:mm:ss";
+                }
+                return moment(date).format(format);
+            },
+            /*添加*/
+            admin_add(title,url,w,h){
+                this.x_admin_show(title,url,w,h);
+            },
+            /*停用*/
+            admin_stop(id){
+                layer.confirm('确认要取消选取该专家吗？',function(index){
+                    //往后台发送请求，把当前小区状态修改为”停用“
+                    var map = {
+                        userid: id,
+                        projectid: app.project.projectid,
+                        status:0,  //注意这里的status要和三层框架的相同
+                    }
+                    axios.post("/examine/updateStatus/",map).then((res)=>{
+                        if(res.data.flag){
+                            layer.msg('已停用!',{icon: 5,time:1000});
+                        }
+                        app.getProjectList();
+                    })
+                    //alert("取消选择了"+id);
+                });
+            },
+            /*启用*/
+            admin_start(id){
+                layer.confirm('确认要选取该专家吗？',function(index){
+                    //往后台发送请求，新建一个评审行
+                    var examine = {
+                        userid: id,
+                        projectid: app.project.projectid,
+                        examineStatus: 1,
+                       }
+                    axios.post("/examine/add/",examine).then((res)=>{
+                        if(res.data.flag){
+                            layer.msg('已启用!',{icon: 6,time:1000});
+                        }
+                        app.getProjectList();
+                    })
+                    //alert("选择了"+id);
+                });
+            },
+            // 模糊匹配
+            stringMatch(str, key){
+            let index = -1, flag = false;
+            for(var i = 0, arr = key.split(""); i < arr.length; i++ ){
+                //有一个关键字都没匹配到，则没有匹配到数据
+                if(str.indexOf(arr[i]) < 0){
+                    break;
+                }else{
+                    let match = str.matchAll(arr[i]);
+                    let next = match.next();
+                    while (!next.done){
+                        if(next.value.index > index){
+                            index = next.value.index;
+                            if(i === arr.length - 1){
+                                flag = true
+                            }
+                            break;
+                        }
+                        next = match.next();
+                    }
+                }
+            }
+            return flag;
+        },
+            /*弹出层*/
+            /*
+                参数解释：
+                title	标题
+                url		请求的url
+                id		需要操作的数据id
+                w		弹出层宽度（缺省调默认值）
+                h		弹出层高度（缺省调默认值）
+            */
+        x_admin_show(title,url,width,height){
+                if (title == null || title == '') {
+                    title=false;
+                };
+                if (url == null || url == '') {
+                    url="404.html";
+                };
+                if (width == null || width == '') {
+                    width=800;
+                };
+                if (height == null || height == '') {
+                    height=($(window).height() - 50);
+                };
+                layer.open({
+                    type: 2,
+                    area: [width+'px', height +'px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    shadeClose: true,
+                    shade:0.4,
+                    title: title,
+                    content: url,
+                    cancel: function(index, layero){
+                        //使用右上角x关闭弹窗层，回调方法，重新加载页面数据，让修改或者新增的数据立马显示在页面上
+                        app.getProjectList();
+                    }
+                });
+            },
+            /*关闭弹出框口*/
+            x_admin_close(){
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            },
+            getQueryString(name){
+                let reg = `(^|&)${name}=([^&]*)(&|$)`
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            },
+            projectFilter(){
+                this.projectList.forEach( (project,index) =>{
+                    // console.log("index"+index+" project="+project.projectName);
+                    if (project.projectStatus!=2){
+                        this.projectList.splice(index,1);
+                        console.log("删除了index"+index+"project:"+project.projectName);
+                        // this.deleteExpert(index);
+                        this.total = this.projectList.length;
+                    }
+                });
+            },
+        },
+        // readname(){
+        //   this.getusername();
+        // },
+        // async getusername(){
+        //    for (const message of this.messageList) {
+        //        const index = this.messageList.indexOf(message);
+        //         await axios.get("/user/"+message.messageFromid).then((res)=>{
+        //            this.$set(message,'messageFromusername', res.data.data.name);
+        //             console.log(message.messageFromusername);
+        //        }).catch(err => {  console.log(err);} );
+        //    }
+        // },
+        created:function() {//Vue生命周期方法，加载页面时会执行该方法
+            layui.use(['laydate','element','laypage','layer'], function(){
+                $ = layui.jquery;//jquery
+                layer = layui.layer;//弹出层
+                okLoading.close($);
+                layer.ready(function(){ //为了layer.ext.js加载完毕再执行
+                    layer.photos({
+                        photos: '#x-img'
+                    });
+                });
+            });
+           // console.log('projectID'+this.getQueryString("projectid"));
+           this.userid = this.getQueryString("userid");
+           this.getProjectList();
+            // if(this.searchMap.getuserid==null) this.searchMap.getuserid=1;
+            // console.log("in searchMap : "+this.searchMap.getuserid);
+            // //初始页面获取小区列表信息
+            // this.search();
+            // this.readname();
+        }
+    });
+
+</script>
+
+</body>
+</html>

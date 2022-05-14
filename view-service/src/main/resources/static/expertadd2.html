@@ -27,9 +27,9 @@
     <!--导入ElementUI样式列表，css样式一般都在页面头部-->
     <link rel="stylesheet" href="/css/index.css">
 </head>
-<body>
-<div id="app">
-<div class="x-nav">
+<body style="height: auto">
+<div id="app" style="height: 2500px">
+<div class="x-nav" style="height: auto">
             <span class="layui-breadcrumb">
               <a><cite>首页</cite></a>
               <a><cite>专家管理</cite></a>
@@ -37,7 +37,7 @@
             </span>
     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
-<div class="x-body">
+<div class="x-body" style="height: auto">
 <!--    <el-form-item label="专家姓名" prop="name">-->
 <!--        <el-input disabled="true" > XXX </el-input>-->
 <!--    </el-form-item>-->
@@ -152,7 +152,7 @@
         </el-form-item>
 
         <el-form-item>
-            <el-button type="primary" @click="submitForm('careerList')">提交</el-button>
+            <el-button type="primary" @click="submitForm('careerList')">保存</el-button>
             <el-button @click="addDomain">新增从业情况</el-button>
             <el-button @click="resetForm('careerList')">重置</el-button>
         </el-form-item>
@@ -190,14 +190,18 @@
         </el-form-item>
 
         <el-form-item>
-            <el-button type="primary" @click="submitStudy('studyList')">提交</el-button>
+            <el-button type="primary" @click="submitStudy('studyList')">保存</el-button>
             <el-button @click="addStudy">新增研究领域</el-button>
             <el-button @click="resetForm('studyList')">重置</el-button>
         </el-form-item>
 
     </el-form>
+    <el-button type="success" @click="save()">确认提交</el-button>
 </div>
 </div>
+<script src="lib/layui/layui.js" charset="utf-8"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/echarts.min.js"></script>
 <!--js脚本一般是放在页面尾部-->
 <!--Vue js脚本-->
 <script src="js/vue.js" charset="utf-8"></script>
@@ -212,6 +216,7 @@
         el:"#app",
         data:{
             title:"专家入库申报",
+            userinfo:{},
             fileList:[],
             careerList: {
                 careers: [{
@@ -255,13 +260,14 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            // if(this.message.messageid != null){
-                            //     method = "update"
-                            // }else{
-                            //     method = "add"
-                            // }
-                            let method = "add";
+
+                            // let method = "add";
                             this.careerList.careers.forEach((career,index)=>{
+                                if(career.careerid != null){
+                                    method = "update"
+                                }else{
+                                    method = "add"
+                                }
                                 career.userid = this.careerList.userid;
                                 career.jobStarttime = this.dateFormat(career.selectDate[0]);
                                 career.jobEndtime = this.dateFormat(career.selectDate[1]);
@@ -274,7 +280,7 @@
                                     }
                                 });
                             });
-                            alert('submit!');
+                            // alert('submit!');
                         } else {
                             console.log('error submit!!');
                             return false;
@@ -306,13 +312,13 @@
             submitStudy(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // if(this.message.messageid != null){
-                        //     method = "update"
-                        // }else{
-                        //     method = "add"
-                        // }
-                        let method = "add";
+                        // let method = "add";
                         this.studyList.studys.forEach((study,index)=>{
+                            if(study.studyid != null){
+                                method = "update"
+                            }else{
+                                method = "add"
+                            }
                             study.userid = this.studyList.userid;
                             axios.post("/study/"+method, study).then((res)=>{
                                 if(res.data.flag){
@@ -323,7 +329,7 @@
                                 }
                             });
                         });
-                        alert('submit!');
+                        // alert('submit!');
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -392,21 +398,71 @@
                     this.handleRemove();
                 }
             },
-            save(){
-                var method = "";
-                if(this.community.id != null){
-                    method = "update"
-                }else{
-                    method = "add"
-                }
-                axios.post("/message/"+method,this.message).then((res)=>{
-                    if(res.data.flag){
-                        this.$message({
-                            message: res.data.message,
-                            type: 'success'
-                        });
+            getDateTest(){
+                for (const career of this.careerList.careers) {
+                    const index = this.careerList.careers.indexOf(career);
+                    // var temp = {0:career.jobStarttime,1:career.jobEndtime};
+                    if(career.jobStarttime!=null) {
+                        var temp = [new Date(career.jobStarttime),new Date(career.jobEndtime)];
+                        this.$set(career,"selectDate", temp);
                     }
+                    else{
+                        var temp = [new Date(),new Date()];
+                        this.$set(career,"selectDate", temp);
+                    }
+                }
+
+            },
+            async getuser(){
+                await axios.get("/user/find/"+this.careerList.userid).then((res)=>{
+                    this.userinfo = res.data.data;
                 });
+                if (this.userinfo.careers!=null){
+                    this.careerList.careers = this.userinfo.careers;
+                }
+                if (this.userinfo.studys!=null){
+                    this.studyList.studys = this.userinfo.studys;
+                }
+                this.getDateTest();
+            },
+            async save(){
+                    if (this.userinfo.status == 1 ){
+                        this.userinfo.status = 2;
+                    }
+                    await axios.post("/user/update",this.userinfo).then((res)=> {
+                        if (res.data.flag) {
+                            this.$message({
+                                message: res.data.message,
+                                type: 'success'
+                            });
+                        }
+                    });
+                    var method = "";
+                    if(this.userinfo.status != 1){
+                        method = "update"
+                        text="成功更新了专家入库申报信息！";   //这里有个小问题，都是这个结果
+                    }else{
+                        method = "add"
+                        text="成功提交了专家入库申报请求！";
+                    }
+                    const nowtime = new Date();
+                    var mess = {
+                        messageType:"系统通知",
+                        messageFromid:"10086",
+                        messageGetid:this.careerList.userid,
+                        messageData: "您于"+this.dateFormat(nowtime)+text,
+                        messageTime:nowtime,
+                        messageStatus:0
+                    }
+                    await axios.post("/message/add",mess).then((res)=>{
+                        if(res.data.flag){
+                            console.log("message send sucess!");
+                            this.$message({
+                                message: "您于"+this.dateFormat(nowtime)+text,
+                                type: 'success'
+                            });
+                        }
+                    });
             },
             imgUrl(){
                 return "http://localhost/estate"+app.community.thumbnail;
@@ -415,7 +471,8 @@
                 let reg = `(^|&)${name}=([^&]*)(&|$)`
                 let r = window.location.search.substr(1).match(reg);
                 if (r != null) return unescape(r[2]); return null;
-            },
+            }
+        },
         created:function(){
             layui.use(['element','layer','form'], function(){
                 $ = layui.jquery;//jquery
@@ -424,6 +481,13 @@
                 form = layui.form();
                 okLoading.close($);
             });
+            // if (this.getQueryString("userid")!=null){
+            this.careerList.userid = this.getQueryString("userid");
+            this.studyList.userid = this.getQueryString("userid");
+            this.getuser();
+            console.log("userid = "+this.careerList.userid);
+            console.log("userid2 = "+this.getQueryString("userid"));
+            // }
             // this.message.messageFromid = 4;
             // // 获取父页面传递参数，小区ID
             // this.message.id = this.getQueryString("id");
@@ -433,7 +497,7 @@
             //     this.findById();
             // }
         }
-    }});
+    });
 </script>
 </body>
 </html>

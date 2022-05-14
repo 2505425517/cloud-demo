@@ -27,4 +27,7 @@ public interface ExamineMapper extends Mapper<Examine>  {
 
     @Delete("delete from tb_examine where examine_status = 0")
     public Integer deleteNotworking();
+
+    @Update("update tb_examine set examine_status = #{examine.status}, where projectid = #{projectid} and userid = #{userid}")
+    Integer updateExamine(Examine examine);
 }

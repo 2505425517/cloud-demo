@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>专家库管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<!--    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />-->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <script type="text/javascript" src="lib/loading/okLoading.js"></script>
+    <link rel="stylesheet" href="css/main.css" media="all">
+    <link rel="stylesheet" href="./css/font.css">
+    <!--导入ElementUI样式列表，css样式一般都在页面头部-->
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<style>
+    .show_list{display: block;}
+    .hide_lits{display: none;}
+</style>
+<body>
+<div  id="app">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header header header-demo">
+<!--        <script>-->
+<!--            function getQueryString(name){-->
+<!--                let reg = `(^|&)${name}=([^&]*)(&|$)`-->
+<!--                let r = window.location.search.substr(1).match(reg);-->
+<!--                if (r != null) return unescape(r[2]); return null;-->
+<!--            }-->
+<!--            userid =getQueryString("userid");-->
+<!--            alert(userid);-->
+<!--        </script>-->
+        <div class="layui-main">
+            <div class="admin-logo-box">
+                <img src="images/logo.png" class="logo" width="183px" alt="">
+                <!-- <a class="logo" href="" title="logo">黑马智慧物业管理</a> -->
+                <div class="larry-side-menu">
+                    <img src="images/ss.png" width="44px" height="44px" alt="">
+                </div>
+            </div>
+
+            <ul class="layui-nav" lay-filter="">
+                <li class="layui-nav-item" id="time" style="margin-right: 50px;font-weight: 300;font-size: 16px;color: #fff;position: absolute;left: -250px;top: 0"></li>
+                <li class="layui-nav-item"><img src="./images/yes.png" class="layui-circle"  width="35px" height="35px" alt=""></li>
+                <li class="new-nav " id="gonggao">
+                    <i></i>
+                    <a href="#"><i class="iconfont">&#xe6bc;</i><span class="layui-badge"></span></a>
+                    <ul class="news" id="gonggaos" style="display: none;">
+                        <li class="dropdown-header" style="text-align: center;">4条活动</li>
+                        <li  style="border-bottom: 1px solid #e9e9e9;background: #f9f9f9"> <a href="javascript:;" onclick="xadmin.add_tab('统计页面','notice-list.html')">
+                            <div class="clearfix">
+                                <span class="pull-left"> <i class="btn btn-pink iconfont">&#xe6bc;</i> 日常活动 </span>
+                                <span class="pull-right badge badge-info">+12</span>
+                            </div> </a> </li>
+                        <li  style="border-bottom: 1px solid #e9e9e9;background: #f9f9f9"> <a href="javascript:;" > <i class="btn btn-primary iconfont">&#xe6bc;</i> 专家评审事件 </a> </li>
+
+                        <li > <a href="javascript:;" style="color: #FF7700">查看所有活动 <i class="iconfont">&#xe69b;</i> </a> </li>
+                    </ul>
+                </li>
+                <li class="new-nav" id="new-nav">
+                    <i></i>
+                    <a href="#"><i class="iconfont">&#xe713;</i><span class="layui-badge"></span></a>
+                    <ul class="news" id="news" style="display: none;">
+                        <li class="dropdown-header" style="text-align: center;">5条信息</li>
+                        <li style="border-bottom: 1px solid #e9e9e9;background: #f9f9f9"> <a href="#">
+                            <div class="clearfix">
+                                <span class="pull-left"> <i class="btn btn-pink iconfont" style="font-size: 12px;">&#xe69b;</i> 信息 </span>
+                                <span class="pull-right badge badge-info">+5</span>
+                            </div> </a> </li>
+
+                        <li> <a href="javascript:;" style="color: #FF7700"> 查看所有信息 <i class="iconfont">&#xe69b;</i> </a> </li>
+                    </ul>
+                </li>
+
+                <li class="layui-nav-item"> <a href="javascript:;">菜单</a>
+                    <dl class="layui-nav-child">
+                        <!-- 二级菜单 -->
+                        <dd><a href="javascript:;"  onclick="one_set('个人信息','one_set.html','1000','600')">个人信息</a>
+                        </dd>
+                        <dd><a href="">切换帐号</a></dd>
+                        <dd><a onclick="logout()">退出</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item x-index"><a href="#"></a></li>
+                
+            </ul>
+            
+        </div>
+    </div>
+
+    <!--左侧导航区域-->
+
+
+    <div class="layui-side layui-bg-black x-side show_list" style="left:0px;" id="table1">
+         <div style="height: 130px; width: 220px; ">
+            <a class="img" title="我的头像" style="display: block;width: 80px;height: 80px;margin: 10px auto 10px;">
+                <img src="./images/profile (2).png" class="userAvatar" style="display: block;width: 100%;height: 100%;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;border: 4px solid #44576b;box-sizing: border-box;">
+            </a>
+            <p style=" display: block;width: 100%;height: 25px;color: #ffffff;text-align: center;font-size: 12px;white-space: nowrap;line-height: 25px;overflow: hidden;">
+                你好！<span class="userName">{{userinfo.name}}</span>, 欢迎回来
+            </p>
+        </div> 
+        <div class="layui-side-scroll">
+
+            <ul class="layui-nav layui-nav-tree site-demo-nav " lay-filter="side">
+                <li class="layui-nav-item "> <a class="javascript:;" href="javascript:;" _href="welcome.html"> <i class="fa fa-university" lay-tips="首页"></i><cite>控制台</cite> </a>
+                </li>
+                <!--菜单第一层内容，所属控制台-->
+
+                <li class="layui-nav-item "> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 2px;font-size: 16px;">&#xe612;</i><cite>用户信息管理</cite> </a>
+                    <dl class="layui-nav-child">
+                        <dd class="">
+<!--                            <div v-for="item in list" :key="item">-->
+<!--                                <div class="dataItem">-->
+<!--                                    <a :href="'user_info.html?userid='+item.userid">-->
+<!--                                        测试</a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <a href="javascript:;" v-bind:href="['user_info.html?userid='+userid]">gg</a>-->
+<!--&lt;!&ndash;                            <a  v-bind:href="javascript:;" _href="['user_info.html?userid='+userid]">g3</a>&ndash;&gt;-->
+<!--                            <a  v-bind:href="['user_info.html?userid='+userid]" target="_self">gg</a>-->
+                        <dd class=""> <a id="userinfo" href="javascript:;" _href="user_info.html?userid="> <cite>个人信息查看</cite> </a> </dd>
+                        <dd class=""> <a id="useradd" href="javascript:;" _href="useradd2.html?userid=2"> <cite>修改个人信息</cite> </a> </dd>
+                        <dd class=""> <a id="mailbox" href="javascript:;" _href="mailbox2.html?userid=2">   <cite>消息通知列表</cite> </a> </dd>
+                        </dd>
+                    </dl>
+                </li>
+<!--                <script>-->
+<!--                    function getQueryString(name){-->
+<!--                        let reg = `(^|&)${name}=([^&]*)(&|$)`-->
+<!--                        let r = window.location.search.substr(1).match(reg);-->
+<!--                        if (r != null) return unescape(r[2]); return null;-->
+<!--                    }-->
+<!--                    id =getQueryString("userid");-->
+<!--                    console.log("id="+id);-->
+<!--                    let a = document.getElementById('userinfo');-->
+<!--                    a.getAttribute("_href").value="user_info.html?userid=" + id;-->
+<!--                    a.setAttribute("_href","user_info.html?userid=" + id);-->
+<!--                    a._href = "user_info.html?userid=" + id;-->
+<!--                    console.log(a.href);-->
+<!--                    console.log(a._href);-->
+
+<!--                </script>-->
+                <li id="expert" class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 2px;font-size: 16px;">&#xe613;</i><cite>专家功能模块</cite> </a>
+                    <dl class="layui-nav-child">
+                        <dd class="">
+                        <dd class=""> <a id="expertadd" href="javascript:;" _href="expertadd2.html?userid=">   <cite>*专家入库申报</cite> </a> </dd>
+                        <dd class=""> <a id="expertinfo" href="javascript:;" _href="expert_info.html?userid="> <cite>专家信息管理</cite> </a> </dd>
+                        <dd class=""> <a id="expertexam" href="javascript:;" _href="expert_exam.html?userid="> <cite>专家培训考核</cite> </a> </dd>
+                        </dd>
+                    </dl>
+                </li>
+                
+                <li id="project" class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 2px;font-size: 20px;">&#xe629;</i><cite>项目管理模块</cite> </a>
+                    <dl class="layui-nav-child">
+                    	<dd class=""> <a id="projectadd" href="javascript:;" _href="projectadd2-user.html"> <cite>*申请项目评审</cite> </a> </dd>
+                        <dd class=""> <a id="myprojectlist" href="javascript:;" _href="myprojectlist.html"> <cite>我的项目列表</cite> </a> </dd>
+                        <dd class=""> <a id="allprojectlist" href="javascript:;" _href="allprojectlist.html"> <cite>所有项目列表</cite> </a> </dd>
+                    	<!--<dd class=""> <a href="javascript:;" _href="adminlist.html"> <cite>*查看评议结果</cite> </a> </dd>-->
+
+                        <!--<dd class=""> <a href="javascript:;" _href="authrule.html"> <cite>权限管理</cite> </a> </dd>-->
+                    </dl>
+                </li>
+                <li id="examine" class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 2px;font-size: 20px;">&#xe629;</i><cite>评审管理模块</cite> </a>
+                    <dl class="layui-nav-child">
+                        <dd class=""> <a id="examineprojectlist" href="javascript:;" _href="examineprojectlist.html"> <cite>项目评审列表</cite> </a> </dd>
+                        <dd class=""> <a id="myexamine" href="javascript:;" _href="myexamine.html"> <cite>历史评审归档</cite> </a> </dd>
+                    </dl>
+                </li>
+                <li id="admin" class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 2px;font-size: 20px;">&#xe628;</i><cite>管理员管理</cite> </a>
+                    <dl class="layui-nav-child">
+                        <dd class=""> <a href="javascript:;" _href="adminlist.html"> <cite>管理员列表</cite> </a> </dd>
+                        <dd class=""> <a href="javascript:;" _href="admingroup.html"> <cite>用户组管理</cite> </a> </dd>
+                        <dd class=""> <a href="javascript:;" _href="authrule.html"> <cite>权限管理</cite> </a> </dd>
+                    </dl>
+                </li>
+
+                <li id="system" class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe614;</i><cite>系统设置</cite> </a>
+                    <dl class="layui-nav-child">
+                        <dd class=""> <a href="javascript:;" _href="system.html"> <cite>系统设置</cite> </a> </dd>
+                        <dd class=""> <a id="one_set" href="javascript:;" _href="one_set.html"> <cite>个人设置</cite> </a> </dd>
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item" style="height: 30px; text-align: center"> </li>
+            </ul>
+        </div>
+    </div>
+
+
+    
+
+    <div class="layui-tab layui-tab-card site-demo-title x-main" lay-filter="x-tab" lay-allowclose="true" style="left: 220px;border-left: solid 2px #2299ee;">
+        <ul class="layui-tab-title">
+            <li class="layui-this"> 我的桌面 <i class="layui-icon layui-unselect layui-tab-close">ဆ</i> </li>
+        </ul>
+        <div class="layui-tab-content site-demo site-demo-body">
+            <div class="layui-tab-item layui-show">
+                <iframe frameborder="0" src="welcome.html" class="x-iframe"></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="site-mobile-shade"> </div>
+</div>
+</div>
+
+<script src="lib/layui/layui.js" charset="utf-8"></script>
+<script src="js/main.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/x-layui.js" charset="utf-8"></script>
+<script src="js/echarts.min.js"></script>
+<!--js脚本一般是放在页面尾部-->
+<!--Vue js脚本-->
+<script src="js/vue.js" charset="utf-8"></script>
+<!--引入ElementUI组件库-->
+<script src="js/index.js" charset="utf-8"></script>
+<!--引入Axios js脚本-->
+<script src="js/axios.js" charset="utf-8"></script>
+<!--引入时间插件包Momentjs-->
+<script src="js/moment.min.js" charset="utf-8"></script>
+<script>
+    layui.use(['laydate','element','laypage','layer'], function(){
+        $ = layui.jquery;//jquery
+        laydate = layui.laydate;//日期插件
+        lement = layui.element();//面包导航
+        laypage = layui.laypage;//分页
+        layer = layui.layer;//弹出层
+        okLoading.close($)
+        //以上模块根据需要引入
+    });
+    function one_set(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    function logout(){
+        window.location.href="./login.html" ;
+    }
+    console.log("???");
+</script>
+<script>
+    var app = new Vue({
+        el:"#app",//声明当前Vue在页面的作用域
+        data:{
+            userid:1,
+            userinfo:{}
+        },
+        methods:{
+            test(){
+              return "aaa";
+            },
+            readname(){
+                this.getusername();
+            },
+            async getusername(){
+                for (const message of this.messageList) {
+                    const index = this.messageList.indexOf(message);
+                    await axios.get("/user/"+message.messageFromid).then((res)=>{
+                        this.$set(message,'messageFromusername', res.data.data.name);
+                        console.log(message.messageFromusername);
+                    }).catch(err => {  console.log(err);} );
+                }
+            },
+            getQueryString(name){
+                let reg = `(^|&)${name}=([^&]*)(&|$)`
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            },
+            daohang(){
+                $(".daohang").click(function(){
+                    var table = $(this).attr("ids");
+                    var ids = $(".show_list").attr("id");
+                    $("#"+ids+"").addClass("hide_lits");
+                    $("#"+ids+"").removeClass("show_list");
+                    $(""+table+"").removeClass("hide_lits");
+                    $(""+table+"").addClass("show_list");
+                })
+            },
+            logout() {
+                this.$router.push('/login.html');
+                // $.ajax({
+                //     type:"post",
+                //     url:"xxxxx",
+                //     data:{e:1},
+                //     dataType:"json",
+                //     success:function (data) {
+                //         if(data.status==1){
+                //             layer.msg(data.info,{icon:1,time:1000});
+                //             setTimeout("window.location.href='xxxx'",2000);return false;
+                //             return false;
+                //         }else{
+                //             layer.msg(data.info,{icon:5,time:2000});return false;
+                //         }
+                //     }
+                // })
+                // return false;
+            },
+            one_set(title,url,w,h){
+                x_admin_show(title,url,w,h);
+            },
+            getTime(){
+                var myDate = new Date();
+                var myYear = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+                var myMonth = myDate.getMonth()+1; //获取当前月份(0-11,0代表1月)
+                var myToday = myDate.getDate(); //获取当前日(1-31)
+                var myDay = myDate.getDay(); //获取当前星期X(0-6,0代表星期天)
+                var myHour = myDate.getHours(); //获取当前小时数(0-23)
+                var myMinute = myDate.getMinutes(); //获取当前分钟数(0-59)
+                var mySecond = myDate.getSeconds(); //获取当前秒数(0-59)
+                var week = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+                var nowTime;
+
+                nowTime = myYear+'-'+this.fillZero(myMonth)+'-'+this.fillZero(myToday)+'&nbsp;&nbsp;'+week[myDay]+'&nbsp;&nbsp;'+this.fillZero(myHour)+':'+this.fillZero(myMinute)+':'+this.fillZero(mySecond);
+                //console.log(nowTime);
+                $('#time').html(nowTime);
+            },
+            fillZero(str){
+                var realNum;
+                if(str<10){
+                    realNum	= '0'+str;
+                }else{
+                    realNum	= str;
+                }
+                return realNum;
+            },
+            urlupdate(){
+                let a = document.getElementById('userinfo');
+                a.setAttribute("_href","user_info.html?userid=" + this.userid);
+                a = document.getElementById('useradd');
+                a.setAttribute("_href","useradd2.html?userid=" + this.userid);
+                a = document.getElementById('mailbox');
+                a.setAttribute("_href","mailbox2.html?userid=" + this.userid);
+                // if (this.userinfo.status!=1){
+                    a = document.getElementById('expertadd');
+                    a.setAttribute("_href","expertadd2.html?userid=" + this.userid);
+                // }
+                a = document.getElementById('expertinfo');
+                a.setAttribute("_href","expert_info.html?userid=" + this.userid);
+                a = document.getElementById('expertexam');
+                a.setAttribute("_href","expert_exam.html?userid=" + this.userid);
+                a = document.getElementById('one_set');
+                a.setAttribute("_href","one_set.html?userid=" + this.userid);
+                a = document.getElementById('projectadd');
+                a.setAttribute("_href","projectadd2-user.html?userid=" + this.userid);
+                a = document.getElementById('myprojectlist');
+                a.setAttribute("_href","myprojectlist.html?userid=" + this.userid);
+                a = document.getElementById('examineprojectlist');
+                a.setAttribute("_href","examineprojectlist.html?userid=" + this.userid);
+                a = document.getElementById('myexamine');
+                a.setAttribute("_href","myexamine.html?userid=" + this.userid);
+            },
+             async search(){
+               // if (this.userid ==null) this.userinfo.userid=1;  //测试阶段用
+                await axios.get("/user/find/"+this.userid).then((res)=>{
+                    this.userinfo = res.data.data;
+                });
+                 this.modulecontrol()
+            },
+            //日期格式化方法
+            //date 要进行格式的日期 ；format 格式化的样式
+            dateFormat(date,format){
+                //默认格式化字符串"YYYY-MM-DD HH:mm:ss"
+                if(format == null || format == ''){
+                    format = "YYYY-MM-DD HH:mm:ss";
+                }
+                return moment(date).format(format);
+            },
+            /*弹出层*/
+            /*
+                参数解释：
+                title	标题
+                url		请求的url
+                id		需要操作的数据id
+                w		弹出层宽度（缺省调默认值）
+                h		弹出层高度（缺省调默认值）
+            */
+            x_admin_show(title,url,width,height){
+                if (title == null || title == '') {
+                    title=false;
+                };
+                if (url == null || url == '') {
+                    url="404.html";
+                };
+                if (width == null || width == '') {
+                    width=800;
+                };
+                if (height == null || height == '') {
+                    height=($(window).height() - 50);
+                };
+
+                layer.open({
+                    type: 2,
+                    area: [width+'px', height +'px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    shadeClose: true,
+                    shade:0.4,
+                    title: title,
+                    content: url,
+                    cancel: function(index, layero){
+                        //使用右上角x关闭弹窗层，回调方法，重新加载页面数据，让修改或者新增的数据立马显示在页面上
+                        app.search();
+                    }
+                });
+            },
+            /*关闭弹出框口*/
+            x_admin_close(){
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(client);
+            },
+            one_set(title,url,w,h) {
+                x_admin_show(title, url, w, h);
+            },
+            async modulecontrol(){
+                if (this.userinfo.status==1){
+                    $("#expertinfo").hide();
+                    $("#expertexam").hide();
+                    $("#admin").hide();
+                    $("#allprojectlist").hide();
+                    // $("#project").hide();
+                    $("#examine").hide();
+                    $("#system").hide();
+                    console.log("hide sucess!")
+                }
+                else if (this.userinfo.status==2){
+                    $("#admin").hide();
+                    $("#system").hide();
+                    $("#allprojectlist").hide();
+                    console.log("hide sucess!")
+                }
+                else{
+                    console.log("hide fail!")
+                }
+
+            }
+        },
+        created:function () {//Vue生命周期方法，加载页面时会执行该方法
+            layui.use(['laydate','element','laypage','layer'], function(){
+                $ = layui.jquery;//jquery
+                laydate = layui.laydate;//日期插件
+                lement = layui.element();//面包导航
+                laypage = layui.laypage;//分页
+                layer = layui.layer;//弹出层
+                okLoading.close($)
+                //以上模块根据需要引入
+
+            });
+            var click=document.getElementById('new-nav');
+            var news=document.getElementById('news');
+            click.addEventListener('mousemove',function () {
+                news.style.display='block';
+            });
+            click.addEventListener('mouseout',function () {
+                news.style.display='none';
+            });
+
+            var gonggao=document.getElementById('gonggao');
+            var gonggaos=document.getElementById('gonggaos');
+            gonggao.addEventListener('mousemove',function () {
+                gonggaos.style.display='block';
+            });
+            gonggao.addEventListener('mouseout',function () {
+                gonggaos.style.display='none';
+            });
+
+
+            setInterval(this.getTime,1000);
+            this.userid = this.getQueryString("userid");
+            if (this.userid==null) this.userid = 1;
+            console.log("userid = " + this.userid);
+            this.search();
+            this.daohang();
+            this.urlupdate();
+            console.log("here！" );
+            this.modulecontrol();
+        }
+    });
+
+</script>
+
+
+
+<script>
+    $(".daohang").click(function(){
+        var table = $(this).attr("ids");
+        var ids = $(".show_list").attr("id");
+        $("#"+ids+"").addClass("hide_lits");
+        $("#"+ids+"").removeClass("show_list");
+        $(""+table+"").removeClass("hide_lits");
+        $(""+table+"").addClass("show_list");
+    })
+</script>
+
+
+<!--    function logout() {-->
+<!--        $.ajax({-->
+<!--            type:"post",-->
+<!--            url:"xxxxx",-->
+<!--            data:{e:1},-->
+<!--            dataType:"json",-->
+<!--            success:function (data) {-->
+<!--                if(data.status==1){-->
+<!--                    layer.msg(data.info,{icon:1,time:1000});-->
+<!--                    setTimeout("window.location.href='xxxx'",2000);return false;-->
+<!--                    return false;-->
+<!--                }else{-->
+<!--                    layer.msg(data.info,{icon:5,time:2000});return false;-->
+<!--                }-->
+<!--            }-->
+
+<!--        })-->
+<!--        return false;-->
+<!--    }-->
+
+
+<!--</script>-->
+<!--<script>-->
+<!--    //顶部时间-->
+<!--    function getTime(){-->
+<!--        var myDate = new Date();-->
+<!--        var myYear = myDate.getFullYear(); //获取完整的年份(4位,1970-????)-->
+<!--        var myMonth = myDate.getMonth()+1; //获取当前月份(0-11,0代表1月)-->
+<!--        var myToday = myDate.getDate(); //获取当前日(1-31)-->
+<!--        var myDay = myDate.getDay(); //获取当前星期X(0-6,0代表星期天)-->
+<!--        var myHour = myDate.getHours(); //获取当前小时数(0-23)-->
+<!--        var myMinute = myDate.getMinutes(); //获取当前分钟数(0-59)-->
+<!--        var mySecond = myDate.getSeconds(); //获取当前秒数(0-59)-->
+<!--        var week = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];-->
+<!--        var nowTime;-->
+
+<!--        nowTime = myYear+'-'+fillZero(myMonth)+'-'+fillZero(myToday)+'&nbsp;&nbsp;'+week[myDay]+'&nbsp;&nbsp;'+fillZero(myHour)+':'+fillZero(myMinute)+':'+fillZero(mySecond);-->
+<!--        //console.log(nowTime);-->
+<!--        $('#time').html(nowTime);-->
+<!--    };-->
+<!--    function fillZero(str){-->
+<!--        var realNum;-->
+<!--        if(str<10){-->
+<!--            realNum	= '0'+str;-->
+<!--        }else{-->
+<!--            realNum	= str;-->
+<!--        }-->
+<!--        return realNum;-->
+<!--    }-->
+<!--    setInterval(getTime,1000);-->
+<!--</script>-->
+<script>
+    window.onload=function () {
+        var click=document.getElementById('new-nav');
+        var news=document.getElementById('news');
+        click.addEventListener('mousemove',function () {
+            news.style.display='block';
+        });
+        click.addEventListener('mouseout',function () {
+            news.style.display='none';
+        });
+
+        var gonggao=document.getElementById('gonggao');
+        var gonggaos=document.getElementById('gonggaos');
+        gonggao.addEventListener('mousemove',function () {
+            gonggaos.style.display='block';
+        });
+        gonggao.addEventListener('mouseout',function () {
+            gonggaos.style.display='none';
+        });
+    }
+</script>
+</body>
+</html>

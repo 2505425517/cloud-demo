@@ -3,6 +3,7 @@ package com.mywork.view.controller;
 
 
 import com.mywork.view.common.MessageConstant;
+import com.mywork.view.common.PageResult;
 import com.mywork.view.common.Result;
 import com.mywork.view.common.StatusCode;
 import com.mywork.view.pojo.Project;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auth: zhuan
@@ -26,6 +28,23 @@ public class ProjectController {
     @Autowired
     private ProjectServiceImpl projectService;
 
+    @RequestMapping("/findforExamine/{userid}")
+    public Result findforExamine(@PathVariable("userid") Integer userid) {
+        Result projects = projectService.findForExamine(userid);
+        System.out.println(projects);
+        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,projects);
+    }
+    @RequestMapping("/search")
+    public PageResult search(@RequestBody Map searchMap){
+        System.out.println(searchMap);
+        PageResult page = projectService.search(searchMap);
+        return page;
+    }
+    @RequestMapping("/findByUserId/{userid}")
+    public Result findByUserId(@PathVariable("userid") Integer userid){
+        Result page = projectService.findByUserID(userid);
+        return page;
+    }
     @RequestMapping("/findall")
     public Result findAll() {
         Result page = projectService.findAll();

@@ -14,6 +14,8 @@
         <link rel="stylesheet" href="css/main.css" media="all">
         <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" media="all">
         <link rel="stylesheet" href="lib/bootstrap/js/bootstrap.min.js" media="all">
+        <script type="text/javascript" src="lib/loading/okLoading.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.css">
         <!--导入ElementUI样式列表，css样式一般都在页面头部-->
         <link rel="stylesheet" href="/css/index.css">
     </head>
@@ -120,26 +122,35 @@
 <!--                    </template>-->
 <!--                </el-calendar>-->
                 <div class="block" style="margin: 20px">
-                    <el-timeline>
+                    <el-timeline v-for="(item,index) in messageList" v-if="index<3">
                         <el-timeline-item timestamp="--------------------" placement="top">
                             <el-card>
-                                <h4>{{messageList[0].messageData}}</h4>
-                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>
+                                <h4>{{item.messageData}}</h4>
+                                <p>{{userinfo.name}}  提交于 {{dateFormat(item.messageTime)}}</p>
                             </el-card>
                         </el-timeline-item>
-                        <el-timeline-item timestamp="--------------------" placement="top">
-                            <el-card>
-                                <h4>{{messageList[1].messageData}}</h4>
-                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>
-                            </el-card>
-                        </el-timeline-item>
-                        <el-timeline-item timestamp="--------------------" placement="top">
-                            <el-card>
-                                <h4>{{messageList[2].messageData}}</h4>
-                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>
-                            </el-card>
-                        </el-timeline-item>
+
                     </el-timeline>
+<!--                    <el-timeline >-->
+<!--                        <el-timeline-item timestamp="&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;" placement="top">-->
+<!--                            <el-card>-->
+<!--                                <h4>{{messageList[0].messageData}}</h4>-->
+<!--                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>-->
+<!--                            </el-card>-->
+<!--                        </el-timeline-item>-->
+<!--                        <el-timeline-item timestamp="&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;" placement="top">-->
+<!--                            <el-card>-->
+<!--                                <h4>{{messageList[1].messageData}}</h4>-->
+<!--                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>-->
+<!--                            </el-card>-->
+<!--                        </el-timeline-item>-->
+<!--                        <el-timeline-item timestamp="&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;" placement="top">-->
+<!--                            <el-card>-->
+<!--                                <h4>{{messageList[2].messageData}}</h4>-->
+<!--                                <p>{{userinfo.name}} 提交于 {{dateFormat(messageList[0].messageTime)}}</p>-->
+<!--                            </el-card>-->
+<!--                        </el-timeline-item>-->
+<!--                    </el-timeline>-->
                 </div>
             </section>
         </div>
@@ -294,11 +305,18 @@
             },
             methods:{
                 async test(){
+                    this.searchMap.getuserid=this.userinfo.userid;
                     await axios.post("/message/search",this.searchMap).then((res)=>{
                         app.messageList = res.data.data;
+                        //app.total = res.data.total;
                     });
                     console.log(this.messageList);
+                    // console.log("在前端删除");
+                    // this.messageList.splice(3,1);
+                    // console.log(this.messageList);
                 },
+
+
                 //日期格式化方法
                 //date 要进行格式的日期 ；format 格式化的样式
                 dateFormat(date,format){
@@ -316,9 +334,9 @@
                     let r = window.location.search.substr(1).match(reg);
                     if (r != null) return unescape(r[2]); return null;
                 },
-                search(){
+                async search(){
                     if (this.userinfo.userid ==null) this.userinfo.userid=1;  //测试阶段用
-                    axios.get("/user/find/"+this.userinfo.userid).then((res)=>{
+                    await axios.get("/user/find/"+this.userinfo.userid).then((res)=>{
                         this.userinfo = res.data.data;
                     });
                     // axios.get("/study/"+this.userinfo.userid).then((res)=>{
@@ -342,7 +360,7 @@
                 });
                 //初始页面获取列表信息
                 this.userinfo.userid = this.getQueryString("userid");
-                alert("userid = "+ this.userinfo.userid);
+                // alert("userid = "+ this.userinfo.userid);
                 this.search();
                 this.test()
             }

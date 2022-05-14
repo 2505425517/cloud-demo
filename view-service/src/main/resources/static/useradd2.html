@@ -90,6 +90,8 @@
 <script src="/js/index.js"></script>
 <!--导入Axios依赖包-->
 <script src="/js/axios.js" charset="utf-8"></script>
+<!--引入时间插件包Momentjs-->
+<script src="js/moment.min.js" charset="utf-8"></script>
 <script type="text/javascript">
     var app = new Vue({
         el:"#app",
@@ -138,10 +140,10 @@
         methods:{
             findById(){
                 if (this.userinfo.userid ==null) this.userinfo.userid=5; //测试用
-                alert("userid="+this.userinfo.userid);
+                // alert("userid="+this.userinfo.userid);
                 axios.get("/user/"+this.userinfo.userid).then((res)=>{
                     this.userinfo = res.data.data;
-                    this.fileList.push({url:"http://localhost/estate"+this.community.thumbnail});
+                    // this.fileList.push({url:"http://localhost/estate"+this.community.thumbnail});
                 });
             },
             handleSuccess(response, file, fileList){
@@ -189,6 +191,44 @@
                             message: res.data.message,
                             type: 'success'
                         });
+                        this.sendmessage(method);
+                    }
+                });
+
+            },
+            //日期格式化方法
+            //date 要进行格式的日期 ；format 格式化的样式
+            dateFormat(date,format){
+                //默认格式化字符串"YYYY-MM-DD HH:mm:ss"
+                if(format == null || format == ''){
+                    format = "YYYY-MM-DD HH:mm:ss";
+                }
+                return moment(date).format(format);
+            },
+            sendmessage(method){
+                if (method = "update"){
+                    text = "修改了个人基础信息！";
+                }
+                else{
+                    text = "成功注册并录入了个人基础信息！";
+                }
+                const nowtime = new Date();
+                var mess = {
+                    messageType:"系统通知",
+                    messageFromid:10086,
+                    messageGetid:this.userinfo.userid,
+                    messageData:"您成功于"+this.dateFormat(nowtime)+text,
+                    messageTime:nowtime,
+                    messageStatus:0
+                }
+                axios.post("/message/add",mess).then((res)=>{
+                    if(res.data.flag){
+                        console.log("您成功于"+this.dateFormat(nowtime)+text);
+                        console.log(mess);
+                        // this.$message({
+                        //     message: res.data.message,
+                        //     type: 'success'
+                        // });
                     }
                 });
             },

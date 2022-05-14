@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>
-        专家评审项目
+        项目评审结果
     </title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -58,85 +58,95 @@
             </tr>
             </tbody>
         </table>
+        <br/>
+        <table class="layui-table welcome" style="text-align: left !important; padding-left:20px;">
+            <tbody>
+            <tr>
+                <th>项目评审方案</th>
+                <td><span>{{project.projectScheme}}</span></td>
+            </tr>
+            <tr>
+                <th>项目评审地点</th>
+                <td><span>{{project.projectAddress}}</span></td>
+            </tr>
+            <tr>
+                <th>评审所需专家数</th>
+                <td>{{project.expertNum}}</td>
+            </tr>
+            <tr>
+                <th>项目评审开始时间</th>
+                <td>{{this.dateFormat(project.projectstartTime)}}</td>
+            </tr>
+            <tr>
+                <th>项目评审结束时间</th>
+                <td>{{this.dateFormat(project.projectendTime)}}</td>
+            </tr>
 
-        <el-form :model="project" :rules="rules" ref="projectFormRef" label-width="120px" class="demo-ruleForm">
-<!--            <el-row>-->
-<!--                <el-form-item label="项目申请人" prop="userid" >-->
-<!--                    <el-input v-model="project.userid" ></el-input>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="项目所属领域" prop="name">-->
-<!--                    <el-input v-model="project.concept" ></el-input>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="项目所属单位" prop="workunit">-->
-<!--                    <el-input v-model="project.workUnit" ></el-input>-->
-<!--                </el-form-item>-->
-<!--            </el-row>-->
-<!--            <el-form-item label="项目名称" prop="name">-->
-<!--                <el-input v-model="project.projectName" ></el-input>-->
-<!--            </el-form-item>-->
+            </tbody>
+        </table>
+        <br/>
+        <el-button type="success" plain style="margin-bottom: 20px;width: 100%;text-align: left;">专家评审结果</el-button>
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" id="allChecked" :checked="checkedIDs.length===examineList.length" @click="allChecked">
+                </th>
+                <th>
+                    项目名称
+                </th>
+                <th>
+                    评审专家姓名
+                </th>
+                <th>
+                    项目评审得分
+                </th>
+                <th>
+                    项目评审建议
+                </th>
+                <th>
+                    项目评审结果
+                </th>
+                <th>
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody id="x-img">
+            <tr v-for="(examine,index) in examineList">
+                <td>
+                    <input type="checkbox" :id="'id'+examine.examineid" :value="examine.examineid" v-model="checkedIDs">
+                </td>
+<!--                <td>{{examine.projectid}}</td>-->
+<!--                <td>{{examine.projectusername}}</td>-->
+                <td>{{examine.projectname}}</td>
+<!--                <td>{{examine.concept}}</td>-->
+                <td>{{examine.username}}</td>
+                <td>{{examine.examineScore}}</td>
+                <td>{{examine.examineSuggest}}</td>
+                <td>
+                    <el-button v-if="examine.examineResult == 0" type="info" plain>未评审</el-button>
+                    <el-button v-else-if="examine.examineResult == 2" type="primary" plain>修改后通过</el-button>
+                    <el-button v-else-if="examine.examineResult == 1" type="success" plain>通过</el-button>
+                    <el-button v-else-if="examine.examineResult == 3" type="danger" plain>未通过</el-button>
+                </td>
+                <td class="td-manage">
+                    <el-button  v-if="examine.examineResult==0" disabled type="info" plain @click="examine_edit('编辑','examine.html',examine.projectid,'1000','600')">
+                        查看 </el-button>
+                    <el-button v-else type="primary" plain @click="examine_edit('查看我的评审','examine.html',examine.projectid,'1000','600')">
+                        查看 </el-button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-<!--            <el-form-item label="项目简述" prop="fromid" >-->
-<!--                <el-input-->
-<!--                        type="textarea"-->
-<!--                        :rows="3"-->
-
-<!--                        v-model="project.projectInfo">-->
-<!--                </el-input>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="项目资料" prop="thumbnail">-->
-<!--                <el-upload-->
-<!--                        class="upload-demo"-->
-<!--                        drag-->
-<!--                        action="https://jsonplaceholder.typicode.com/posts/"-->
-<!--                        multiple>-->
-<!--                    <i class="el-icon-upload"></i>-->
-<!--                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-<!--                    <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
-<!--                </el-upload>-->
-<!--            </el-form-item>-->
-
-<!--            <row>-->
-                <el-button type="success" plain style="margin-bottom: 20px;width: 100%;text-align: left;">项目评审内容</el-button>
-<!--            </row>-->
-            <el-radio-group v-model="examine.examineResult" style="margin:20px">
-                <el-radio :label="1" border>通过</el-radio>
-                <el-radio :label="2" border>修改后通过</el-radio>
-                <el-radio :label="3" border>未通过</el-radio>
-            </el-radio-group>
-            <el-form-item label="评审综合得分" prop="examineScore" >
-                <el-input v-model="examine.examineScore" style="width: 20%"></el-input>
-            </el-form-item>
-            <el-form-item label="专家评审建议" prop="examineSuggest">
-                <el-input
-                         type="textarea"
-                          v-model="examine.examineSuggest"
-                          :rows="4"
-                          style="width: 98%"
-                ></el-input>
-            </el-form-item>
-            <div class="layui-input-inline" style="margin-left: 20px;margin-bottom: 20px;width: 96%" >
-                <textarea  v-model="examine.examineSuggest" id="demo" style="display: none;margin-left: 20px;margin-bottom: 20px;width: 96%"  ></textarea>
-            </div>
-            <el-form-item label="项目评审日期" prop="time">
-                <div class="block">
-                    <el-date-picker
-                            v-model="project.selectDate"
-                            type="datetimerange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-                    </el-date-picker>
-                </div>
-            </el-form-item>
-            
-
-            </br>
-            <el-form-item >
-                <el-button type="success" @click="save()" style="text-align: center">保存</el-button>
-                <el-button @click="clearAll()" style="text-align: center">重置</el-button>
-            </el-form-item>
-        </el-form>
         </br>
+        <div style="text-align: center">
+            <el-button type="warning" plain style="text-align: right; font-size: 17px;color: brown; margin-bottom: 20px;width: 50%;text-align: center;">
+                项目评审最终得分为 {{this.finalScore}},评审通过！</el-button>
+        </div>
+
+
 <!--        <el-row style="text-align: center">-->
 <!--            <span><b>项目状态： </b></span>-->
 <!--            <el-button type="warning" plain>{{project.projectStatus == 0?'申请阶段':'进行阶段'}}</el-button>-->
@@ -160,7 +170,10 @@
     var app = new Vue({
         el:"#app",
         data:{
-            title:"专家评审项目",
+            examineList:{},
+            title:"项目评审结果",
+            checkedIDs:[],
+            finalScore:0,
             project:{thumbnail:"",projectid:"",projectStatus:0 ,selectDate:[" "," "],projectStarttime:"",projectEndtime:""},
             fileList:[],
             examine:{examineResult:"",examineSuggest:"",examineScore:"",userid:"",projectid:""},
@@ -179,6 +192,74 @@
             }
         },
         methods:{
+            //全选、全不选方法
+            allChecked: function () {
+                if (this.checkedIDs.length === this.examineList.length) {
+                    // 全不选
+                    this.checkedIDs = [];
+
+                } else {
+                    this.checkedIDs = [];
+                    // 全选
+                    this.examineList.forEach( (item) =>{
+                        console.log("!"+item.examineid);
+                        this.checkedIDs.push(item.examineid); // 与checkbox的value统一
+                    })
+                }
+            },
+            // 专家评审
+            examine_edit (title,url,id,w,h) {
+                url = url+"?projectid="+id+"&userid="+this.userid;
+                this.x_admin_show(title,url,w,h);
+            },
+            readname(){
+                this.getprojectname();
+                this.getusername();
+                this.getScore();
+            },
+            getScore(){
+                count = 0;
+                for (const examine of this.examineList) {
+                    const index = this.examineList.indexOf(examine);
+                    if (examine.examineScore!=null){
+                        this.finalScore += examine.examineScore;
+                        count++;
+                    }
+                }
+                this.finalScore = this.finalScore/count;
+            },
+            async getExamineList(){
+                //this.searchMap.userid = this.userid;
+                // http://localhost:8086/project/findforExamine/1
+                await axios.get("/examine/findByProjectId/"+this.project.projectid).then((res)=>{
+                    app.examineList = res.data.data;
+                });
+                this.readname();
+            },
+            async getusername(){
+                for (const examine of this.examineList) {
+                    const index = this.examineList.indexOf(examine);
+                    await axios.get("/user/"+examine.userid).then((res)=>{
+                        this.$set(examine,'username', res.data.data.name);
+                        console.log(examine.username);
+                    }).catch(err => {  console.log(err);} );
+                    await axios.get("/user/"+examine.projectuserid).then((res)=>{
+                        this.$set(examine,'projectusername', res.data.data.name);
+                        console.log(examine.projectusername);
+                    }).catch(err => {  console.log(err);} );
+                }
+            },
+            async getprojectname(){
+                for (const examine of this.examineList) {
+                    const index = this.examineList.indexOf(examine);
+                    await axios.get("/project/findById/"+examine.projectid).then((res)=>{
+                        this.$set(examine,'projectname', res.data.data.projectName);
+                        this.$set(examine,'concept', res.data.data.concept);
+                        this.$set(examine,'projectuserid', res.data.data.userid);
+                        console.log(examine);
+                    }).catch(err => {  console.log(err);} );
+                }
+            },
             /*弹出层*/
             /*
                 参数解释：
@@ -404,7 +485,7 @@
             });
 
             this.getProject();
-            this.getExamine();
+            this.getExamineList();
             // UE.getEditor('content',{initialFrameWidth:750,initialFrameHeight:400,});
             // this.getDateTest();
             // this.project.projectid = 4;

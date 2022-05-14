@@ -45,6 +45,11 @@ public class ExamineController {
         Result page = examineService.findByProjectId(projectid);
         return page;
     }
+    @RequestMapping("/projectid/{projectId}/userid/{userId}")
+    public Result selectbyboth(@PathVariable("projectId") Integer projectid,@PathVariable("userId") Integer userid){
+        Result page = examineService.selectbyboth(projectid,userid);
+        return page;
+    }
     @RequestMapping("/update")
     public Result update(@RequestBody Examine examine){
         Result page = examineService.update(examine);

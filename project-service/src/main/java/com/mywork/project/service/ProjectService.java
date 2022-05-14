@@ -1,8 +1,10 @@
 package com.mywork.project.service;
 
+import com.github.pagehelper.Page;
 import com.mywork.project.pojo.Project;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProjectService {
 
@@ -51,9 +53,28 @@ public interface ProjectService {
 
    public Boolean add(Project project);
 
+    Page<Project> search(Map searchMap);
+
+    List<Project> findByUserId(Integer userid);
+
    public Project findById(Integer id);
 
    public Boolean update(Project project);
 
-   public Boolean del(List<Integer> ids);
+    //
+    //    @Override
+    //    public Boolean updateStatus(String status, Integer id) {
+    //        Project Project = new Project();
+    //        Project.setId(id);
+    //        Project.setStatus(status);
+    //        int row = projectMapper.updateByPrimaryKeySelective(Project);
+    //        if(row>0){
+    //            return true;
+    //        }else{
+    //            return false;
+    //        }
+    //    }
+    List<Project> findForExamine(Integer userid);
+
+    public Boolean del(List<Integer> ids);
 }

@@ -23,4 +23,6 @@ public interface ExamineService {
    Result updateStatus(Map<String,Integer> map);
 
    Result getStatus(Map<String,Integer> map);
+
+    Result selectbyboth(Integer projectid, Integer userid);
 }

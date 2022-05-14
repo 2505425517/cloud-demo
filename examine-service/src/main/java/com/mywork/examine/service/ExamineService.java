@@ -51,7 +51,11 @@ public interface ExamineService {
 
    public Boolean add(Examine examine);
 
-   List<Examine> findByUserId(Integer userid);
+    List<Integer> getprojectidByuserid(Integer userid);
+
+    Examine selectbyboth(Integer projectid, Integer userid);
+
+    List<Examine> findByUserId(Integer userid);
 
    List<Examine> findByProjectId(Integer projectid);
 

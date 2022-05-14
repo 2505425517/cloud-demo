@@ -1,7 +1,9 @@
 package com.mywork.project.controller;
 
 
+import com.github.pagehelper.Page;
 import com.mywork.project.common.MessageConstant;
+import com.mywork.project.common.PageResult;
 import com.mywork.project.common.Result;
 import com.mywork.project.common.StatusCode;
 import com.mywork.project.pojo.Project;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auth: zhuan
@@ -42,6 +45,12 @@ public class ProjectController {
 //        return new PageResult(true, StatusCode.OK, MessageConstant.COMMUNITY_SEARCH_SUCCESS,page.getResult(),page.getTotal());
 //    }
 //
+    @RequestMapping("/findforExamine/{userid}")
+    public Result findforExamine(@PathVariable("userid") Integer userid) {
+        List<Project> projects = projectService.findForExamine(userid);
+        System.out.println(projects);
+        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,projects);
+    }
     @RequestMapping("/findall")
     public Result findAll() {
         // 根据id查询订单并返回
@@ -52,6 +61,16 @@ public class ProjectController {
     public Result add(@RequestBody Project project){
         Boolean add = projectService.add(project);
         return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS);
+    }
+    @RequestMapping("/search")
+    public PageResult search(@RequestBody Map searchMap){
+        Page<Project> page = projectService.search(searchMap);
+        return new PageResult(true, StatusCode.OK, MessageConstant.COMMUNITY_SEARCH_SUCCESS,page.getResult(),page.getTotal());
+    }
+    @RequestMapping("/findByUserId/{userid}")
+    public Result findByUserId(@PathVariable("userid") Integer userid){
+        List<Project> projects = projectService.findByUserId(userid);
+        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,projects);
     }
     @RequestMapping("/findById/{projectid}")
     public Result findById(@PathVariable("projectid") Integer projectid){

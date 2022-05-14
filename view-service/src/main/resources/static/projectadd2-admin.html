@@ -97,7 +97,11 @@
         </br>
         <el-row style="text-align: center">
             <span><b>项目状态： </b></span>
-            <el-button type="warning" plain>{{project.projectStatus == 0?'申请阶段':'进行阶段'}}</el-button>
+            <el-button v-if="project.projectStatus == 0" type="info" plain>申请阶段</el-button>
+            <el-button v-else-if="project.projectStatus == 1" type="primary" plain @click="passTime()">待评审阶段</el-button>
+            <el-button v-else-if="project.projectStatus == 2" type="success" plain @click="passTime()">评审阶段</el-button>
+            <el-button v-else-if="project.projectStatus == 3" type="warning" plain >完成阶段</el-button>
+<!--            <el-button type="warning" plain>{{project.projectStatus == 0?'申请阶段':'进行阶段'}}</el-button>-->
         </el-row>
 
     </div>
@@ -290,6 +294,7 @@
                 }else{
                     method = "add"
                 }
+                this.project.projectStatus=1;
                 axios.post("/project/"+method,this.project).then((res)=>{
                     if(res.data.flag){
                         this.$message({
@@ -298,6 +303,70 @@
                         });
                     }
                 });
+                this.sendmessage(method,this.project.userid);
+            },
+            sendmessage(method,getid){
+                if (method = "update"){
+                    text = "通过管理员审核，进入待评审阶段！";
+                }
+                else{
+                    text = "通过管理员审核，进入待评审阶段！";
+                }
+                const nowtime = new Date();
+                var mess = {
+                    messageType:"系统通知",
+                    messageFromid:10086,
+                    messageGetid:getid,
+                    messageData:"您的项目于"+this.dateFormat(nowtime)+text,
+                    messageTime:nowtime,
+                    messageStatus:0
+                }
+                axios.post("/message/add",mess).then((res)=>{
+                    if(res.data.flag){
+                        console.log("您成功于"+this.dateFormat(nowtime)+text);
+                        console.log(mess);
+                        // this.$message({
+                        //     message: res.data.message,
+                        //     type: 'success'
+                        // });
+                    }
+                });
+            },
+            sendmessage2(){
+                text = "完成专家评审流程，请到我的项目列表中查看评审结果！";
+                const nowtime = new Date();
+                var mess = {
+                    messageType:"系统通知",
+                    messageFromid:10086,
+                    messageGetid:this.project.userid,
+                    messageData:"您的项目于"+this.dateFormat(nowtime)+text,
+                    messageTime:nowtime,
+                    messageStatus:0
+                }
+                axios.post("/message/add",mess).then((res)=>{
+                    if(res.data.flag){
+                        console.log("您成功于"+this.dateFormat(nowtime)+text);
+                        console.log(mess);
+                    }
+                });
+            },
+            passTime(){
+                if(this.project.projectStatus==1) {
+                    this.project.projectStatus=2;
+                }
+                else if (this.project.projectStatus==2){
+                    this.sendmessage2();
+                    this.project.projectStatus=3;
+                }
+                axios.post("/project/update",this.project).then((res)=>{
+                    if(res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                    }
+                });
+                location.reload();
             },
             imgUrl(){
                 return "http://localhost/estate"+app.project.thumbnail;

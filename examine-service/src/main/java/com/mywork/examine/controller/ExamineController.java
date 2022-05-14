@@ -26,6 +26,12 @@ public class ExamineController {
     @Autowired
     private ExamineServiceImpl examineService;
 
+    @RequestMapping("/getprojectbyuserid/{userId}")
+    public Result getprojectbyuserid(@PathVariable("userId") Integer userid) {
+        // 根据id查询订单并返回
+        List<Integer> list = examineService.getprojectidByuserid(userid);
+        return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,list);
+    }
     @RequestMapping("/findall")
     public Result findAll() {
         // 根据id查询订单并返回
@@ -47,6 +53,12 @@ public class ExamineController {
     public Result getStatus(@RequestBody Map<String,Integer> datas){
         Integer status = examineService.getStatus((Integer)datas.get("projectid"),(Integer)datas.get("userid"));
         return new Result(true, StatusCode.OK, MessageConstant.COMMUNITY_ADD_SUCCESS,status);
+    }
+    @RequestMapping("/projectid/{projectId}/userid/{userId}")
+    public Result selectbyboth(@PathVariable("projectId") Integer projectid,@PathVariable("userId") Integer userid){
+        Examine examine = examineService.selectbyboth(projectid,userid);
+        System.out.println(examine.toString());
+        return new Result(true,StatusCode.OK,MessageConstant.COMMUNITY_FIND_BY_ID_SUCCESS,examine);
     }
     @RequestMapping("/findByUserId/{userId}")
     public Result findById(@PathVariable("userId") Integer userid){

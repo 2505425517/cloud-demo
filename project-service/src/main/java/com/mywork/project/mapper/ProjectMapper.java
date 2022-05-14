@@ -13,5 +13,6 @@ public interface ProjectMapper extends Mapper<Project>  {
 
 //    @Select("select * from tb_project where projectid = #{projectid}")
 //    public List<Project> selectbyid (Integer projectid);
-
+    @Select("select * from tb_project where userid = #{userid}")
+    public List<Project> selectbyuserid (Integer userid);
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>
-         专家抽取列表
+         我的项目列表
     </title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -21,20 +21,20 @@
 <div class="x-nav">
             <span class="layui-breadcrumb">
               <a><cite>首页</cite></a>
-              <a><cite>专家管理</cite></a>
-              <a><cite>专家抽取</cite></a>
+              <a><cite>项目管理</cite></a>
+              <a><cite>我的项目列表</cite></a>
             </span>
     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
 <div class="x-body" id="app">
     <div>
-        <span class="demonstration">根据专家姓名搜索</span>
-        <el-input v-model="searchMap.data" style="width: 20%" placeholder="请输入专家名称"></el-input>
-        <el-button type="primary" plain @click="searchMap.pageNum=1;getExpertList()">搜索</el-button>
-        <span class="demonstration">根据所在城市搜索</span>
-        <el-input v-model="searchMap.precentcity" style="width: 20%" placeholder="请输入所在城市名称"></el-input>
-        <el-button type="primary" plain @click="searchMap.pageNum=1;getExpertList()">搜索</el-button>
-        <el-button type="warning" plain @click="expertFilter();expertFilter();expertFilter()">智能筛选</el-button>
+        <span class="demonstration">根据项目名称搜索</span>
+        <el-input v-model="searchMap.data" style="width: 20%" placeholder="请输入项目名称"></el-input>
+        <el-button type="primary" plain @click="searchMap.pageNum=1;getProjectList()">搜索</el-button>
+<!--        <span class="demonstration">根据所在城市搜索</span>-->
+<!--        <el-input v-model="searchMap.precentcity" style="width: 20%" placeholder="请输入所在城市名称"></el-input>-->
+<!--        <el-button type="primary" plain @click="searchMap.pageNum=1;getExpertList()">搜索</el-button>-->
+<!--        <el-button type="warning" plain @click="expertFilter();expertFilter();expertFilter()">智能筛选</el-button>-->
     </div>
     <br>
 <!--    <xblock>-->
@@ -46,28 +46,25 @@
         <thead>
         <tr>
             <th>
-                <input type="checkbox" id="allChecked" :checked="checkedIDs.length===expertList.length" @click="allChecked">
+                <input type="checkbox" id="allChecked" :checked="checkedIDs.length===projectList.length" @click="allChecked">
             </th>
             <th>
-                用户ID
+                项目ID
             </th>
             <th>
-                专家姓名
+                项目名称
             </th>
             <th>
-                专家性别
-            </th>
-<!--            <th>-->
-<!--                专家邮件地址-->
-<!--            </th>-->
-            <th>
-                专家联系方式
+                项目简介
             </th>
             <th>
-                专家现居城市
+                项目所属领域
             </th>
             <th>
-                专家选取状态
+                项目申请单位
+            </th>
+            <th>
+                项目评审状态
             </th>
             <th>
                 操作
@@ -75,91 +72,102 @@
         </tr>
         </thead>
         <tbody id="x-img">
-        <tr v-for="(expert,index) in expertList">
+        <tr v-for="(project,index) in projectList">
             <td>
-                <input type="checkbox" :id="'id'+expert.userid" :value="expert.userid" v-model="checkedIDs">
+                <input type="checkbox" :id="'id'+project.projecrid" :value="project.projectid" v-model="checkedIDs">
             </td>
-            <td>{{expert.userid}}
+            <td>{{project.projectid}}</td>
 <!--            <td>{{expert.name}}</td>-->
-            <td>
-                <el-popover
-                        placement="right"
-                        width="600"
-                        trigger="hover">
-                        <table class="layui-table welcome" style="text-align: left !important;padding-left:15px  "><!--table-layout: fixed-->
+<!--            <td>-->
+<!--                <el-popover-->
+<!--                        placement="right"-->
+<!--                        width="600"-->
+<!--                        trigger="hover">-->
+<!--                        <table class="layui-table welcome" style="text-align: left !important;padding-left:15px  ">&lt;!&ndash;table-layout: fixed&ndash;&gt;-->
 
-                            <thead>
-                            <tr>
-                                <th>专家姓名</th>
-                                <th>年龄/国籍</th>
-                                <th>邮箱地址 </th>
-                                <th>通讯地址</th>
-                                <th>最高学位</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><span id="lbServerName">{{expert.name}}</span></td>
-                                <td>{{expert.age+"/"+expert.nationality}}</td>
-                                <td>{{expert.mailAddress}}</td>
-                                <td>{{expert.address}}</td>
-                                <td>{{expert.highestQualification}}</td>
-                            </tr>
-                            </tbody>
+<!--                            <thead>-->
+<!--                            <tr>-->
+<!--                                <th>项目名称</th>-->
+<!--                                <th>项目简介</th>-->
+<!--                                <th>项目资料</th>-->
+<!--                                <th>项目</th>-->
+<!--                                <th>最高学位</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr>-->
+<!--                                <td><span id="lbServerName">{{expert.name}}</span></td>-->
+<!--                                <td>{{expert.age+"/"+expert.nationality}}</td>-->
+<!--                                <td>{{expert.mailAddress}}</td>-->
+<!--                                <td>{{expert.address}}</td>-->
+<!--                                <td>{{expert.highestQualification}}</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
 
-                            <tr>
-                                <th>从业时间</th>
-                                <th>从业单位</th>
-                                <th>职位名称</th>
-                                <th>职务描述</th>
-                                <th>证明人</th>
-                            </tr>
-                            <tbody>
-                            <tr v-for="(career,index) in expert.careers">
-                                <td>{{career.jobStarttime.split(" ")[0]}} 至 {{career.jobEndtime.split(" ")[0]}} </td>
-                                <td>{{career.workUnit}}</td>
-                                <td>{{career.jobName}}</td>
-                                <td>{{career.jobInfo}}</td>
-                                <td>{{career.identify}}</td>
-                            </tr>
-                            </tbody>
+<!--                            <tr>-->
+<!--                                <th>从业时间</th>-->
+<!--                                <th>从业单位</th>-->
+<!--                                <th>职位名称</th>-->
+<!--                                <th>职务描述</th>-->
+<!--                                <th>证明人</th>-->
+<!--                            </tr>-->
+<!--                            <tbody>-->
+<!--                            <tr v-for="(career,index) in expert.careers">-->
+<!--                                <td>{{career.jobStarttime.split(" ")[0]}} 至 {{career.jobEndtime.split(" ")[0]}} </td>-->
+<!--                                <td>{{career.workUnit}}</td>-->
+<!--                                <td>{{career.jobName}}</td>-->
+<!--                                <td>{{career.jobInfo}}</td>-->
+<!--                                <td>{{career.identify}}</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
 
-                            <tr>
-                                <th>研究领域名称</th>
-                                <th>研究领域描述</th>
-                                <th>所属科技分类</th>
-                            </tr>
-                            <tbody>
-                            <tr v-for="(study,index) in expert.studys">
-                                <td>{{study.fieldname}}</td>
-                                <td>{{study.fieldinfo}}</td>
-                                <td>{{study.concept}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    <el-button slot="reference">{{expert.name}}</el-button>
-                </el-popover>
-            </td>
-
-            <td>{{expert.gender}}</td>
+<!--                            <tr>-->
+<!--                                <th>研究领域名称</th>-->
+<!--                                <th>研究领域描述</th>-->
+<!--                                <th>所属科技分类</th>-->
+<!--                            </tr>-->
+<!--                            <tbody>-->
+<!--                            <tr v-for="(study,index) in expert.studys">-->
+<!--                                <td>{{study.fieldname}}</td>-->
+<!--                                <td>{{study.fieldinfo}}</td>-->
+<!--                                <td>{{study.concept}}</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    <el-button slot="reference">{{expert.name}}</el-button>-->
+<!--                </el-popover>-->
+<!--            </td>-->
+            <td>{{project.projectName}}</td>
+            <td>{{project.projectInfo}}</td>
 <!--            <td>{{expert.mailAddress}}</td>-->
-            <td>{{expert.phoneNum}}</td>
-            <td>{{expert.precentcity}}</td>
-            <td class="td-status">
-                <span :class="expert.examineStatus == 0?'layui-btn layui-btn-normal':'layui-btn layui-btn layui-btn-danger'">
-                    {{expert.examineStatus == 0?"未选取":"已选取"}}
-                </span>
+            <td>{{project.concept}}</td>
+            <td>{{project.workUnit}}</td>
+<!--            <td>{{project.projectStatus}}</td>-->
+            <td>
+<!--            <span :class="project.projectStatus == 0?'layui-btn layui-btn-normal':'layui-btn layui-btn layui-btn-danger'">-->
+<!--                    {{project.projectStatus == 0?"申请阶段":"待评审阶段"}}-->
+<!--                </span>-->
+                <el-button v-if="project.projectStatus == 0" type="info" plain>申请阶段</el-button>
+                <el-button v-else-if="project.projectStatus == 1" type="primary" plain >待评审阶段</el-button>
+                <el-button v-else-if="project.projectStatus == 2" type="success" plain >评审阶段</el-button>
+                <el-button v-else-if="project.projectStatus == 3" type="warning" plain  @click="examine_result('查看结果','examineResult.html',project.projectid,'1000','600')">完成阶段</el-button>
             </td>
+<!--            <td class="td-status">-->
+<!--                <span :class="expert.examineStatus == 0?'layui-btn layui-btn-normal':'layui-btn layui-btn layui-btn-danger'">-->
+<!--                    {{expert.examineStatus == 0?"未选取":"已选取"}}-->
+<!--                </span>-->
+<!--            </td>-->
             <td class="td-manage">
-                <a style="text-decoration:none" @click="expert.examineStatus == 0?admin_start(expert.userid):admin_stop(expert.userid)" href="javascript:;" :title="expert.examineStatus == 0?'选用':'取消'">
-                    <i class="layui-icon" v-if="expert.examineStatus == 0">&#xe62f;</i>
-                    <i class="layui-icon" v-if="expert.examineStatus != 0">&#xe601;</i>
-                </a>
-                <a title="编辑" href="javascript:;" @click="expert_edit('编辑','mailadd2.html',expert.userid,'1000','600')"
+<!--                <a style="text-decoration:none" @click="expert.examineStatus == 0?admin_start(expert.userid):admin_stop(expert.userid)" href="javascript:;" :title="expert.examineStatus == 0?'取消':'选用'">-->
+<!--                    <i class="layui-icon" v-if="expert.examineStatus == 0">&#xe62f;</i>-->
+<!--                    <i class="layui-icon" v-if="expert.examineStatus != 0">&#xe601;</i>-->
+<!--                </a>-->
+<!--                @click="expert_edit('编辑','mailadd2.html',expert.userid,'1000','600')"-->
+                <a title="编辑" href="javascript:;" @click="project_edit('编辑','projectadd2-user.html',project.projectid,'1000','600')"
                    class="ml-5" style="text-decoration:none">
                     <i class="layui-icon">&#xe642;</i>
                 </a>
-                <a title="删除" href="javascript:;" @click="del_one(expert.userid)"
+                <a title="删除" href="javascript:;" @click="del_one(project.projectid)"
                    style="text-decoration:none">
                     <i class="layui-icon">&#xe640;</i>
                 </a>
@@ -167,7 +175,7 @@
         </tr>
         </tbody>
     </table>
-    <div style="text-align: right;margin: 10px;margin-right: 1%">共有{{total}}个搜索结果，符合要求的有{{expertList.length}}个</div>
+    <div style="text-align: right;margin: 10px;margin-right: 1%">共有{{total}}个搜索结果</div>
     <el-pagination
             background
             @size-change="handleSizeChange"
@@ -195,84 +203,60 @@
         data:{
             // fromusername:"",
             // getuserid,
-            project:{projectid:1},
+            total:"",
+            userid:"",
+            projectList:[{}],
             checkedIDs:[],
-            expertList:{},
             total:10,
-            searchMap:{"startTime":"","endTime":"","data":"","pageNum":1,"pageSize":20,workUnit:"",concept:"",precentcity:""}
+            searchMap:{"startTime":"","endTime":"","data":"","pageNum":1,"pageSize":20,userid:"",status:-1}
         },
         methods:{
-            getProject(){
-                this.project.projectid = this.getQueryString("projectid");
-                if(this.project.projectid==null) this.project.projectid = 1; //测试用
-                    axios.get("/project/findById/"+this.project.projectid).then((res)=>{
-                    app.project = res.data.data;
-                });
+            // 专家评审
+            examine_result (title,url,id,w,h) {
+                url = url+"?projectid="+id;
+                this.x_admin_show(title,url,w,h);
             },
-            async getExamineStatus(){
-                // for (const expert of this.expertList) {
-                //     const index = this.messageList.indexOf(message);
-                //     await axios.post("/examine/getStatus",).then((res)=>{
-                //         console.log("before:"+res.data.data);
-                //         this.$set(expert, 'examineStatus',res.data.data);
-                //         console.log("after:"+expert.examineStatus);
-                //     }).catch(err => {  console.log(err);} );
-                // }
-               await this.expertList.forEach( (expert,index) =>{
-                    axios.post("/examine/getStatus",{projectid:this.project.projectid,userid:expert.userid}).then((res)=>{
-                        console.log("before:"+res.data.data);
-                        this.$set(expert, 'examineStatus',res.data.data );
-                    });
-                    console.log("after:"+expert.examineStatus);
-                });
-
-            }
-            ,
-            async getExpertList(){
-                await axios.post("/user/getExpert",this.searchMap).then((res)=>{
-                    app.expertList = res.data.data;
+            async getProjectList(){
+                this.searchMap.userid = this.userid;
+                await axios.post("/project/search",this.searchMap).then((res)=>{
+                    app.projectList = res.data.data;
                     app.total = res.data.total;
                 });
-                this.getExamineStatus();
             },
-            deleteExpert(id){
-                this.expertList.splice(id,1);
-                console.log("在前端删除了第"+id+"个专家！");
-            },
-            expertFilter(){
-                this.expertList.forEach( (expert,index) =>{
-                    // expert.careers.forEach((career) =>{
-                    //     if(career.workUnit== this.project.workUnit){
-                    //         this.deleteExpert(expert.userid);
-                    //     };
-                    // });
-                    console.log("index"+index+" expert="+expert.name);
-                    var flag = false;
-                    expert.studys.forEach((study) =>{
-                        console.log( "concept "+study.concept);
-                        if(study.concept == this.project.concept){
-                            flag=true;
-                        }else {};
-                    })
-                    if (flag==false){
-                        this.expertList.splice(index,1);
-                        console.log("删除了index"+index+"name:"+expert.name);
-                        // this.deleteExpert(index);
-                    } else{ };
-                });
+            del_one(id){
+                this.$confirm('请问您是否要删除该项目评审申请?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //把选中的ID封装到集合中
+                    this.checkedIDs.push(id);
+                    //执行删除操作
+                    axios.post("/project/del",this.checkedIDs).then((res)=>{
+                        if(res.data.flag){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        }
+                        //删除成功，把选中的ID列表置为空
+                        this.checkedIDs = [];
+                        //把页面置为1，重新获取列表数据
+                        this.searchMap.pageNum = 1;
+                        this.getProjectList();
+                    });
 
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
-            //分页条件查询小区列表
-            async search(){
-                // await axios.post("/message/search",this.searchMap).then((res)=>{
-                //     app.messageList = res.data.data;
-                //     app.total = res.data.total;
-                // });
-                // this.readname();
-                // console.log(this.messageList);
-            },
-            urlImg(url){
-                return "http://localhost/estate"+url;
+            // 编辑
+           project_edit (title,url,id,w,h) {
+                url = url+"?projectid="+id;
+                this.x_admin_show(title,url,w,h);
             },
             //全选、全不选方法
             allChecked: function () {
@@ -291,12 +275,12 @@
             //handleSizeChange每页数量发生变化后触发的方法
             handleSizeChange(pageSize){
                 this.searchMap.pageSize = pageSize;
-                this.getExpertList();
+                this.getProjectList();
             },
             //handleCurrentChange页码变化触发方法
             handleCurrentChange(pageNum){
                 this.searchMap.pageNum = pageNum;
-                this.getExpertList();
+                this.getProjectList();
             },
             //日期格式化方法
             //date 要进行格式的日期 ；format 格式化的样式
@@ -309,11 +293,6 @@
             },
             /*添加*/
             admin_add(title,url,w,h){
-                this.x_admin_show(title,url,w,h);
-            },
-            //编辑
-            expert_edit (title,url,id,w,h) {
-                url = url+"?id="+id;
                 this.x_admin_show(title,url,w,h);
             },
             /*停用*/
@@ -329,7 +308,7 @@
                         if(res.data.flag){
                             layer.msg('已停用!',{icon: 5,time:1000});
                         }
-                        app.getExpertList();
+                        app.getProjectList();
                     })
                     //alert("取消选择了"+id);
                 });
@@ -347,7 +326,7 @@
                         if(res.data.flag){
                             layer.msg('已启用!',{icon: 6,time:1000});
                         }
-                        app.getExpertList();
+                        app.getProjectList();
                     })
                     //alert("选择了"+id);
                 });
@@ -409,7 +388,7 @@
                     content: url,
                     cancel: function(index, layero){
                         //使用右上角x关闭弹窗层，回调方法，重新加载页面数据，让修改或者新增的数据立马显示在页面上
-                        app.search();
+                        app.getProjectList();
                     }
                 });
             },
@@ -447,9 +426,9 @@
                     });
                 });
             });
-           console.log('projectID'+this.getQueryString("projectid"));
-            this.getExpertList();
-            this.getProject();
+           // console.log('projectID'+this.getQueryString("projectid"));
+           this.userid = this.getQueryString("userid");
+           this.getProjectList();
             // if(this.searchMap.getuserid==null) this.searchMap.getuserid=1;
             // console.log("in searchMap : "+this.searchMap.getuserid);
             // //初始页面获取小区列表信息
